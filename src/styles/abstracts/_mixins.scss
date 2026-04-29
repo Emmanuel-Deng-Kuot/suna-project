@@ -1,0 +1,36 @@
+@use 'variables' as *;
+
+@mixin respond-up($width) {
+  @media (min-width: $width) {
+    @content;
+  }
+}
+
+@mixin respond-down($width) {
+  @media (max-width: $width) {
+    @content;
+  }
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin section-shell($padding-mobile, $padding-desktop: null) {
+  padding: $padding-mobile;
+  background: $color-white;
+
+  @if $padding-desktop != null {
+    @include respond-up($bp-md) {
+      padding: $padding-desktop;
+    }
+  }
+}
+
+@mixin card-surface($radius: 16px, $bg: $color-white) {
+  background: $bg;
+  border-radius: $radius;
+  overflow: hidden;
+}

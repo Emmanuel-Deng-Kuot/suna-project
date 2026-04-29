@@ -1,0 +1,23 @@
+@use '../abstracts/variables' as *;
+
+:root {
+  font-family: $font-sans;
+  line-height: 1.5;
+  font-weight: 400;
+  background-color: $color-white;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
