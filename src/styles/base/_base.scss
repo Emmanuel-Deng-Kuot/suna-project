@@ -1,0 +1,43 @@
+@use '../abstracts/variables' as *;
+@use '../abstracts/mixins' as *;
+
+/* Mobile-first base/resets and responsive defaults */
+
+*,*::before,*::after{box-sizing:border-box}
+html{font-family: $font-sans; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
+body{
+  margin: 0;
+  color: $color-text;
+  background: $color-white;
+  line-height: 1.4;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* container utility */
+.container{width:100%;padding:0 16px;margin-left:auto;margin-right:auto}
+
+/* Images and media: prevent overflow */
+img, picture, video, svg { display: block; max-width: 100%; height: auto; }
+
+/* Touch targets */
+button, input, select, a { -webkit-tap-highlight-color: transparent; }
+button, .btn, .btn-quick-view, .btn-add-to-cart { min-width: 44px; min-height: 44px; }
+
+/* Typography: mobile-first with clamp scaling up */
+h1{font-family: $font-display; font-size: clamp(24px, 6vw, 36px); margin: 0 0 8px}
+h2{font-family: $font-display; font-size: clamp(20px, 5.5vw, 28px); margin: 0 0 8px}
+h3{font-family: $font-brand; font-size: clamp(16px, 4.5vw, 20px); margin: 0}
+p{font-family: $font-ui; font-size: clamp(14px, 3.5vw, 16px); margin: 0}
+
+/* Utility to prevent accidental horizontal overflow on mobile */
+html, body { min-width: 0; overflow-x: hidden; }
+
+/* Responsive breakpoints (min-width) kept minimal here; component queries will extend as needed */
+@include respond-up($bp-md) {
+  .container { padding: 0 20px; }
+  h1{font-size: clamp(28px, 6vw, 44px);} 
+}
+
+@include respond-up($bp-lg) {
+  .container { padding: 0 24px; }
+}

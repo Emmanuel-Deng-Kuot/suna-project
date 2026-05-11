@@ -114,8 +114,8 @@ export class FAQAccordion {
  */
 export class ProductCardInteractions {
   constructor() {
-    this.cartSelector = '.cart, .buy-btn';
-    this.quickViewSelector = '.quick';
+    this.cartSelector = '.btn-add-to-cart, .buy-btn';
+    this.quickViewSelector = '.btn-quick-view';
     this.variantSelector = '.variants img';
   }
 
@@ -183,7 +183,8 @@ export class ProductCardInteractions {
 
   _handleVariantClick(variant) {
     const card = variant.closest('.product-card, .set-card');
-    const mainImg = card?.querySelector('.product-image img, .set-image img');
+    // Support several main image containers used across pages
+    const mainImg = card?.querySelector('.product-image img, .set-image img, .image-box img');
 
     if (mainImg && variant.src) {
       mainImg.src = variant.src;
@@ -202,7 +203,7 @@ export class ProductCardInteractions {
  * Wishlist Toggle
  */
 export class Wishlist {
-  constructor(selector = '.inspiration-wrapper .like') {
+  constructor(selector = '.inspiration-wrapper .like-counter') {
     this.likeEl = query(selector);
     this.count = 5;
     this.liked = false;
@@ -227,6 +228,79 @@ export class Wishlist {
     this.likeEl.style.color = this.liked ? '#DC412D' : '';
   }
 }
+
+/**
+ * Inspiration dot popup helper
+ * Shows the shared `.product-popup` positioned next to the hovered/focused hotspot
+ */
+export class InspirationPopup {
+  constructor(wrapperSelector = '.inspiration-wrapper') {
+    this.wrapper = query(wrapperSelector);
+    this.dots = this.wrapper ? Array.from(this.wrapper.querySelectorAll('.product-hotspot')) : [];
+    this.popup = this.wrapper ? query('.product-popup', this.wrapper) : null;
+  }
+
+  init() {
+    if (!this.wrapper || !this.popup || !this.dots.length) return;
+
+    // Ensure popup is positioned absolute and inside wrapper
+    this.popup.style.position = 'absolute';
+    this.popup.style.left = '0px';
+    this.popup.style.top = '0px';
+
+    const imgEl = query('img', this.popup);
+    const titleEl = this.popup.querySelector('h4');
+    const descEl = this.popup.querySelector('p');
+
+    const show = (dot) => {
+      // Use data attributes if present
+      const src = dot.dataset.img || (imgEl && imgEl.dataset.orig) || (imgEl && imgEl.src);
+      const title = dot.dataset.title || (titleEl && titleEl.textContent) || '';
+      const desc = dot.dataset.desc || (descEl && descEl.textContent) || '';
+
+      if (imgEl && src) {
+        if (!imgEl.dataset.orig) imgEl.dataset.orig = imgEl.src;
+        imgEl.src = src;
+      }
+      if (titleEl) titleEl.textContent = title;
+      if (descEl) descEl.textContent = desc;
+
+      // Position popup near dot (above the dot)
+      const wrapperRect = this.wrapper.getBoundingClientRect();
+      const dotRect = dot.getBoundingClientRect();
+
+      // Ensure popup dimensions are measured
+      this.popup.classList.add('visible');
+      const popupRect = this.popup.getBoundingClientRect();
+
+      const left = dotRect.left - wrapperRect.left + dotRect.width / 2 - popupRect.width / 2;
+      const top = dotRect.top - wrapperRect.top - popupRect.height - 10;
+
+      // clamp within wrapper
+      const clampedLeft = Math.max(8, Math.min(left, wrapperRect.width - popupRect.width - 8));
+      const clampedTop = Math.max(8, top);
+
+      this.popup.style.left = clampedLeft + 'px';
+      this.popup.style.top = clampedTop + 'px';
+    };
+
+    const hide = () => {
+      this.popup.classList.remove('visible');
+    };
+
+    this.dots.forEach((dot) => {
+      dot.addEventListener('mouseenter', () => show(dot));
+      dot.addEventListener('mouseleave', hide);
+      dot.addEventListener('focus', () => show(dot));
+      dot.addEventListener('blur', hide);
+    });
+
+    // Hide popup on scroll/resize to avoid misplacement
+    window.addEventListener('scroll', hide, { passive: true });
+    window.addEventListener('resize', hide);
+  }
+}
+
 
 /**
  * Subscribe Forms
@@ -328,7 +402,11 @@ export function initAllAnimations() {
   const subscribe = new SubscribeForms();
   subscribe.init();
 
-  return { scrollReveal, lazyLoad, faq, products, wishlist, subscribe };
+  // Inspiration dot popups
+  const inspirationPopups = new InspirationPopup();
+  inspirationPopups.init();
+
+  return { scrollReveal, lazyLoad, faq, products, wishlist, subscribe, inspirationPopups };
 }
 
 export default ScrollReveal;

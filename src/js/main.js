@@ -6,7 +6,9 @@ import { initAllSliders } from '../components/slider.js';
 import { initAllDropdowns } from '../components/dropdown.js';
 import { initBestSellerTabs } from '../components/tabs.js';
 import Countdown from '../components/countdown.js';
+import initProductCountdowns from './product-countdown.js';
 import { initAllAnimations } from '../components/animations.js';
+import initFooterAccordion from './footer-accordion.js';
 import { onReady } from './utils.js';
 
 /**
@@ -15,46 +17,73 @@ import { onReady } from './utils.js';
 function initializeApp() {
   console.info('[App] Initializing components...');
 
-  // 1. Header with navigation
+  // 1. Header with navigation (CRITICAL - visible immediately)
   const header = new Header();
   header.init();
 
-  // 2. Mobile menu
+  // 2. Mobile menu (CRITICAL - user interaction)
   const mobileMenu = new MobileMenu({
     mobileBreakpoint: 768,
   });
   mobileMenu.init();
 
-  // 3. Sliders (hero, carousel, testimonials, inspiration)
+  // 3. Sliders (ABOVE-THE-FOLD - hero, carousel visible)
   const sliders = initAllSliders();
 
-  // 4. Dropdowns (search, language, currency, tabs)
+  // 4. Dropdowns (CRITICAL - user interaction)
   const dropdowns = initAllDropdowns();
 
-  // 5. Product tabs
-  const tabs = initBestSellerTabs();
+  // 5-7. Defer non-critical components to next frame
+  const components = { header, mobileMenu, sliders, dropdowns };
 
-  // 6. Countdown timer
-  const countdown = new Countdown({
-    deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-  });
-  countdown.init();
+  // Use requestIdleCallback for low-priority initialization
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => {
+      // Product tabs
+      const tabs = initBestSellerTabs();
+      components.tabs = tabs;
 
-  // 7. Animations (scroll reveal, lazy load, FAQs, product interactions, etc.)
-  const animations = initAllAnimations();
+      // Countdown timer
+      const countdown = new Countdown({
+        deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      });
+      countdown.init();
+      components.countdown = countdown;
 
-  console.info('[App] All components initialized successfully!');
+      // Per-product countdowns (small red pill on product cards)
+      const productCountdowns = initProductCountdowns();
+      components.productCountdowns = productCountdowns;
+
+      // Animations (scroll reveal, lazy load, FAQs, product interactions, etc.)
+      const animations = initAllAnimations();
+      components.animations = animations;
+
+      // Footer accordion (mobile)
+      initFooterAccordion();
+
+      console.info('[App] Deferred components initialized');
+    });
+  } else {
+    // Fallback for browsers without requestIdleCallback
+    setTimeout(() => {
+      const tabs = initBestSellerTabs();
+      components.tabs = tabs;
+
+      const countdown = new Countdown({
+        deadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      });
+      countdown.init();
+      components.countdown = countdown;
+
+      const animations = initAllAnimations();
+      components.animations = animations;
+    }, 1000);
+  }
+
+  console.info('[App] Critical components initialized, deferring non-critical components');
 
   // Return components for potential external access
-  return {
-    header,
-    mobileMenu,
-    sliders,
-    dropdowns,
-    tabs,
-    countdown,
-    animations,
-  };
+  return components;
 }
 
 /**
@@ -64,7 +93,7 @@ onReady(() => {
   const app = initializeApp();
   
   // Make app instance available globally if needed for debugging
-  if (process.env.NODE_ENV !== 'production') {
+  if (import.meta.env.DEV) {
     window.__SUNA_APP__ = app;
     console.info('[App] App instance available as window.__SUNA_APP__');
   }

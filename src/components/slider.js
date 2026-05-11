@@ -1,10 +1,10 @@
-/**
- * Slider Component
- * Reusable slider/carousel logic with multiple implementations
- * Factory pattern for different slider types
- */
 
 import { query, queryAll, addClass, removeClass } from '../js/utils.js';
+import { Swiper } from 'swiper';
+import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import 'swiper/css/pagination';
 
 /**
  * Dot-based slider (Hero, Inspiration)
@@ -161,15 +161,178 @@ export class DraggableSlider {
 }
 
 /**
+ * Seamless auto-scrolling track
+ */
+export class AutoScrollingTrack {
+  constructor(trackSelector, options = {}) {
+    this.track = query(trackSelector);
+    this.speed = options.speed || 0.45;
+    this.rafId = null;
+    this.lastTimestamp = 0;
+    this.loopWidth = 0;
+    this.isPaused = false;
+    this.isActive = false;
+    this.resizeObserver = null;
+    this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  init() {
+    if (!this.track || this.reducedMotion) return;
+
+    this._resetClones();
+    this._duplicateContent();
+    this._measure();
+
+    if (window.ResizeObserver) {
+      this.resizeObserver = new ResizeObserver(() => this._measure());
+      this.resizeObserver.observe(this.track);
+    } else {
+      window.addEventListener('resize', () => this._measure(), { passive: true });
+    }
+
+    this._resume();
+  }
+
+  _resetClones() {
+    queryAll('[data-track-clone="true"]', this.track).forEach((clone) => clone.remove());
+  }
+
+  _duplicateContent() {
+    const items = Array.from(this.track.children);
+
+    items.forEach((item) => {
+      const clone = item.cloneNode(true);
+      clone.setAttribute('data-track-clone', 'true');
+      clone.setAttribute('aria-hidden', 'true');
+      this.track.appendChild(clone);
+    });
+  }
+
+  _measure() {
+    this.loopWidth = this.track.scrollWidth / 2;
+    this.isActive = this.loopWidth > this.track.clientWidth;
+
+    if (!this.isActive) {
+      this._pause();
+      this.track.scrollLeft = 0;
+      return;
+    }
+
+    if (!this.rafId && !this.isPaused) {
+      this._resume();
+    }
+  }
+
+  _tick = (timestamp) => {
+    if (!this.isActive || this.isPaused) {
+      this.rafId = null;
+      this.lastTimestamp = 0;
+      return;
+    }
+
+    if (!this.lastTimestamp) {
+      this.lastTimestamp = timestamp;
+    }
+
+    const delta = timestamp - this.lastTimestamp;
+    const distance = (this.speed * delta) / 16.666;
+    this.track.scrollLeft += distance;
+
+    if (this.track.scrollLeft >= this.loopWidth) {
+      this.track.scrollLeft -= this.loopWidth;
+    }
+
+    this.lastTimestamp = timestamp;
+    this.rafId = window.requestAnimationFrame(this._tick);
+  };
+
+  _pause() {
+    this.isPaused = true;
+
+    if (this.rafId) {
+      window.cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
+  }
+
+  _resume() {
+    this.isPaused = false;
+
+    if (!this.isActive || this.rafId) return;
+
+    this.lastTimestamp = 0;
+    this.rafId = window.requestAnimationFrame(this._tick);
+  }
+
+  destroy() {
+    this._pause();
+
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
+  }
+}
+
+/**
+ * Initialize Hero Swiper with fade effect and autoplay
+ */
+export function initHeroSwiper() {
+  const heroElement = query('#hero');
+  const paginationEl = query('.swiper-pagination');
+  
+  if (!heroElement) {
+    console.warn('[Slider] Hero element not found');
+    return null;
+  }
+
+  // Initialize Swiper for hero section
+  const heroSwiper = new Swiper('#hero', {
+    modules: [EffectFade, Autoplay, Pagination],
+    effect: 'fade',
+    loop: true,
+    autoplay: {
+      delay: 4500,
+      disableOnInteraction: false,
+    },
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+    fadeEffect: {
+      crossFade: true,
+    },
+    allowTouchMove: true,
+    speed: 800,
+  });
+
+  const placePaginationInActiveContent = () => {
+    if (!paginationEl) return;
+
+    const activeContent = heroElement.querySelector('.swiper-slide-active .hero-content');
+    if (!activeContent) return;
+
+    if (paginationEl.parentElement !== activeContent) {
+      activeContent.appendChild(paginationEl);
+    }
+  };
+
+  placePaginationInActiveContent();
+  heroSwiper.on('init', placePaginationInActiveContent);
+  heroSwiper.on('slideChangeTransitionEnd', placePaginationInActiveContent);
+  heroSwiper.on('resize', placePaginationInActiveContent);
+
+  return heroSwiper;
+}
+
+/**
  * Factory function to initialize all sliders
  */
 export function initAllSliders() {
-  // Hero dots
-  const heroDots = new DotSlider('.hero .dots span', { autoPlayDelay: 4000 });
-  heroDots.init();
+  // Hero Swiper (fade effect with autoplay)
+  const heroSwiper = initHeroSwiper();
 
   // Collection carousel
-  const collectionCarousel = new Carousel('.collection-cards', '.collection .prev', '.collection .next');
+  const collectionCarousel = new Carousel('.collection-cards', '.collection .btn-prev', '.collection .btn-next');
   collectionCarousel.init();
 
   // Testimonials draggable slider
@@ -177,10 +340,14 @@ export function initAllSliders() {
   testimonialsSlider.init();
 
   // Inspiration dots
-  const inspirationDots = new DotSlider('.inspiration-wrapper .side-dots span', { autoPlayDelay: 3500 });
+  const inspirationDots = new DotSlider('.inspiration-wrapper .carousel-pagination-dots span', { autoPlayDelay: 3500 });
   inspirationDots.init();
 
-  return { heroDots, collectionCarousel, testimonialsSlider, inspirationDots };
+  // Feature tracks marquee
+  const featureTracks = new AutoScrollingTrack('.features-carousel', { speed: 0.5 });
+  featureTracks.init();
+
+  return { heroSwiper, collectionCarousel, testimonialsSlider, inspirationDots, featureTracks };
 }
 
 export default DotSlider;

@@ -1,14 +1,7 @@
-/**
- * Dropdown Component
- * Reusable selector/dropdown logic
- * Handles: search focus, language selection, currency selection
- */
+
 
 import { query, queryAll, addClass, removeClass, setSession, getSession } from '../js/utils.js';
 
-/**
- * Reusable Selector component
- */
 class Selector {
   constructor(selectSelector, options = {}) {
     this.select = query(selectSelector);
@@ -122,7 +115,7 @@ export function initAllDropdowns() {
   searchBox.init();
 
   // Language selector
-  const languageSelector = new Selector('.select-language', {
+  const languageSelector = new Selector('.language-selector', {
     storageKey: 'suna-lang',
     onChange: (lang) => {
       console.info(`[Language] Switched to: ${lang}`);
@@ -131,7 +124,7 @@ export function initAllDropdowns() {
   languageSelector.init();
 
   // Currency selector
-  const currencySelector = new Selector('.select-usd', {
+  const currencySelector = new Selector('.currency-selector', {
     storageKey: 'suna-currency',
     onChange: (currency) => {
       console.info(`[Currency] Switched to: ${currency}`);

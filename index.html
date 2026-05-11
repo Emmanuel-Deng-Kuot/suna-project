@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Lexend:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
     <title>Suna</title>
   </head>
   <body>
@@ -27,7 +26,7 @@
       </span>
   
       <div class="announcement-right">
-        <select class="select-usd" aria-label="Select currency">
+        <select class="currency-selector" aria-label="Select currency">
           <option>(USD$)</option>
           <option>(IDR)</option>
         </select>
@@ -55,7 +54,7 @@
         </div>
     
         <div class="header-icons">
-          <select class="select-language" aria-label="Select language">
+          <select class="language-selector" aria-label="Select language">
             <option>EN</option>
             <option>ID</option>
           </select>
@@ -79,46 +78,60 @@
 
 <main>
 
-<section class="hero">
-  <div class="hero-content">
-    <h1>
-      Where Comfort <br>
-      Meets <span>Prestige</span>
-    </h1>
-    <p>Elevate Your Living Space with Refined Elegance</p>
-    <button>Discover the Elegance</button>
+<section class="hero swiper" id="hero">
+  <div class="swiper-wrapper">
+    <div class="hero-slide swiper-slide">
+      <div class="hero-slide-bg" style="background-image: url('src/assets/comfort.jpg')"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>
+          Where Comfort <br>
+          Meets <span>Prestige</span>
+        </h1>
+        <p>Elevate Your Living Space with Refined Elegance</p>
+        <button>Discover the Elegance</button>
+      </div>
+    </div>
+
+    <div class="hero-slide swiper-slide">
+      <div class="hero-slide-bg" style="background-image: url('src/assets/image-2.png')"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>
+          Sophistication <br>
+          <span>Redefined</span>
+        </h1>
+        <p>Transform Your Space with Timeless Luxury</p>
+        <button>Explore the Collection</button>
+      </div>
+    </div>
   </div>
 
-  <div class="dots">
-    <span class="active"></span>
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
+  <div class="swiper-pagination"></div>
 </section>
 
-<section class="featuress">
-  <div class="features-tracks">
+<section class="features-scroll" id="features">
+  <div class="features-carousel">
     <div class="feature">
       <span>Crafted for Every Home</span>
-      <img src="src/assets/stool.png" alt="Stool" loading="lazy">
+      <img src="src/assets/stool.png" alt="Stool" loading="lazy" decoding="async">
     </div>
     <div class="feature">
       <span>Natural Wood Collection</span>
-      <img src="src/assets/paint.jpg" alt="Natural wood finish" loading="lazy">
+      <img src="src/assets/paint.jpg" alt="Natural wood finish" loading="lazy" decoding="async">
     </div>
     <div class="feature">
       <span>Layers of Perfection</span>
-      <img src="src/assets/chair.png" alt="Chair" loading="lazy">
+      <img src="src/assets/chair.png" alt="Chair" loading="lazy" decoding="async">
     </div>
     <div class="feature">
       <span>Crafted for Every Home</span>
-      <img src="src/assets/stool.png" alt="Stool" loading="lazy">
+      <img src="src/assets/stool.png" alt="Stool" loading="lazy" decoding="async">
     </div>
   </div>
 </section>
 
-<section class="categories">
+<section class="categories" id="categories">
   <h2>Shop by categories</h2>
   <p class="section-subtitle">
     Explore our furniture by room, designed to bring balance, comfort, and timeless beauty
@@ -169,30 +182,30 @@
   </div>
 </section>
 
-<section class="highlight">
+<section class="highlight" id="highlight">
   <p>
     Bring more
-    <span class="pill">
+    <span class="highlight-image-badge">
       <img src="src/assets/light.jpg" alt="Warm lighting" loading="lazy">
     </span>
     warmth
   </p>
   <p>
     And
-    <span class="pill">
+    <span class="highlight-image-badge">
       <img src="src/assets/red couch.jpg" alt="Red couch" loading="lazy">
     </span>
     comfort into your
   </p>
   <p>
     dream home
-    <span class="pill">
+    <span class="highlight-image-badge">
       <img src="src/assets/sitting room.png" alt="Sitting room" loading="lazy">
     </span>
   </p>
 </section>
 
-<section class="products">
+<section class="products" id="products">
 
   <h2>Elevate Your Everyday Living</h2>
   <p class="section-subtitle">
@@ -207,12 +220,12 @@
         <span class="product-badge">Best seller</span>
         <img src="src/assets/lamp.png" alt="Aurea Ceramic Lamp" loading="lazy">
         <div class="hover-actions">
-          <button class="quick">Quick View</button>
-          <button class="cart">Add to Cart</button>
+          <button class="btn-quick-view">Quick View</button>
+          <button class="btn-add-to-cart">Add to Cart</button>
         </div>
       </div>
       <div class="product-info">
-        <p class="category">Lamp</p>
+        <p class="product-category">Lamp</p>
         <h3>Aurea Ceramic Lamp</h3>
         <span class="product-price">$45</span>
         <div class="variants">
@@ -228,12 +241,12 @@
       <div class="product-image">
         <img src="src/assets/chair1a.png" alt="Runs Velvet Chair" loading="lazy">
         <div class="hover-actions">
-          <button class="quick">Quick View</button>
-          <button class="cart">Add to Cart</button>
+          <button class="btn-quick-view">Quick View</button>
+          <button class="btn-add-to-cart">Add to Cart</button>
         </div>
       </div>
       <div class="product-info">
-        <p class="category">Chair</p>
+        <p class="product-category">Chair</p>
         <h3>Runs Velvet Chair</h3>
         <span class="product-price">$120</span>
         <div class="variants">
@@ -249,13 +262,13 @@
       <div class="product-image">
         <img src="src/assets/storage1.png" alt="Edwin Wood Cabinet" loading="lazy">
         <div class="hover-actions">
-          <button class="quick" data-name="Aurea Ceramic Lamp" data-price="$45">Quick View</button>
+          <button class="btn-quick-view" data-name="Aurea Ceramic Lamp" data-price="$45">Quick View</button>
 
-         <button class="cart" data-name="Aurea Ceramic Lamp" data-price="$45">Add to Cart</button>
+         <button class="btn-add-to-cart" data-name="Aurea Ceramic Lamp" data-price="$45">Add to Cart</button>
         </div>
       </div>
       <div class="product-info">
-        <p class="category">Storage</p>
+        <p class="product-category">Storage</p>
         <h3>Edwin Wood Cabinet</h3>
         <span class="product-price">$56</span>
         <div class="variants">
@@ -271,9 +284,10 @@
       <div class="product-image">
         <span class="discount">-30%</span>
         <img src="src/assets/chaira.png" alt="Axis Leather Office Chair" loading="lazy">
+        <div class="product-countdown" data-deadline=""></div>
       </div>
       <div class="product-info">
-        <p class="category">Chair</p>
+        <p class="product-category">Chair</p>
         <h3>Axis Leather Office Chair</h3>
         <span class="product-price">$98 <del>$150</del></span>
         <div class="variants">
@@ -291,7 +305,7 @@
         <img src="src/assets/bed1.png" alt="Serenity Cotton Bedding Set" loading="lazy">
       </div>
       <div class="product-info">
-        <p class="category">Bed</p>
+        <p class="product-category">Bed</p>
         <h3>Serenity Cotton Bedding Set</h3>
         <span class="product-price">$196</span>
         <div class="variants">
@@ -307,7 +321,7 @@
         <img src="src/assets/chair3.png" alt="Haven Oak Chair" loading="lazy">
       </div>
       <div class="product-info">
-        <p class="category">Chair</p>
+        <p class="product-category">Chair</p>
         <h3>Haven Oak Chair</h3>
         <span class="product-price">$70</span>
         <div class="variants">
@@ -324,7 +338,7 @@
         <img src="src/assets/table1.png" alt="Mira Walnut Table" loading="lazy">
       </div>
       <div class="product-info">
-        <p class="category">Table</p>
+        <p class="product-category">Table</p>
         <h3>Mira Walnut Table</h3>
         <span class="product-price">$84</span>
         <div class="variants">
@@ -337,11 +351,11 @@
 
     <div class="product-card">
       <div class="product-image">
-        <span class="sold">Sold out</span>
+        <span class="product-sold-out">Sold out</span>
         <img src="src/assets/vase1.png" alt="Nora Ceramic Vase" loading="lazy">
       </div>
       <div class="product-info">
-        <p class="category">Decor</p>
+        <p class="product-category">Decor</p>
         <h3>Nora Ceramic Vase</h3>
         <span class="product-price">$35</span>
         <div class="variants">
@@ -360,7 +374,7 @@
 
 </section>
 
-<section class="offer-section">
+<section class="offer-section" id="offer">
   <div class="offer-container">
     <div class="offer-content">
       <h2>
@@ -400,7 +414,7 @@
   </div>
 </section>
 
-<section class="features-section">
+<section class="features-section" id="features-benefits">
   <div class="feature-items">
     <img src="src/assets/home-icon.png" alt="" loading="lazy">
     <h3>Free Design Consultation</h3>
@@ -423,7 +437,7 @@
   </div>
 </section>
 
-<section class="home-section">
+<section class="home-section" id="home">
   <div class="home-layout">
     <div class="left-content">
       <h2>Handpicked Elegance<br>for Your Home</h2>
@@ -471,7 +485,7 @@
   </div>
 </section>
 
-<section class="brand-section">
+<section class="brand-section" id="brands">
   <div class="brand-wrapper">
     <img src="src/assets/ikea.png" alt="IKEA" loading="lazy">
     <img src="src/assets/informa.png" alt="Informa" loading="lazy">
@@ -482,7 +496,7 @@
   </div>
 </section>
 
-<section class="collection">
+<section class="collection" id="collection">
   <div class="collection-container">
     <div class="collection-left">
       <h2>
@@ -492,8 +506,8 @@
       </h2>
       <p>Mix-and-match sets that define comfort</p>
       <div class="nav-buttons">
-        <button class="prev">‹</button>
-        <button class="next">›</button>
+        <button class="btn-prev">‹</button>
+        <button class="btn-next">›</button>
       </div>
     </div>
 
@@ -504,7 +518,7 @@
           <img src="src/assets/sofa-set.png" alt="Noir Modular Sofa Set" loading="lazy">
         </div>
         <div class="set-info">
-          <p class="category">Set</p>
+          <p class="product-category">Set</p>
           <h3>Noir Modular Sofa Set</h3>
             <span class="product-price">$250</span>
           <div class="variants">
@@ -522,7 +536,7 @@
           <img src="src/assets/dinning.png" alt="Aven Oak Dining Set" loading="lazy">
         </div>
         <div class="set-info">
-          <p class="category">Set</p>
+          <p class="product-category">Set</p>
           <h3>Aven Oak Dining Set</h3>
             <span class="product-price">$210</span>
           <div class="variants">
@@ -539,7 +553,7 @@
           <img src="src/assets/lounge.png" alt="Luno Lounge Chair Set" loading="lazy">
         </div>
         <div class="set-info">
-          <p class="category">Set</p>
+          <p class="product-category">Set</p>
           <h3>Luno Lounge Chair Set</h3>
           <span class="product-price">$175</span>
           <div class="variants">
@@ -555,7 +569,7 @@
   <a href="#" class="view-all">View All</a>
 </section>
 
-<section class="inspiration">
+<section class="inspiration" id="inspiration">
   <h2>
     Inspiration for the
     <span class="underline-img">
@@ -570,10 +584,10 @@
 
   <div class="inspiration-wrapper">
     <img src="src/assets/living-room.jpg" alt="Living Room Inspiration" loading="lazy">
-    <span class="dot" style="top:30%; left:25%;"></span>
-    <span class="dot" style="top:55%; left:18%;"></span>
-    <span class="dot" style="top:70%; left:35%;"></span>
-    <span class="dot" style="top:60%; left:55%;"></span>
+    <span class="product-hotspot" data-img="src/assets/product-popup.jpg" data-title="Living Room" data-desc="Bring warmth and comfort to your living space" style="top:30%; left:25%;"></span>
+    <span class="product-hotspot" data-img="src/assets/product-popup.jpg" data-title="Cozy Corner" data-desc="A small nook for reading and relaxing" style="top:75%; left:18%;"></span>
+    <span class="product-hotspot" data-img="src/assets/product-popup.jpg" data-title="Accent Shelf" data-desc="Curated decor to elevate your room" style="top:89%; left:48%;"></span>
+    <span class="product-hotspot" data-img="src/assets/product-popup.jpg" data-title="Feature" data-desc="Statement piece that anchors the space" style="top:60%; left:55%;"></span>
 
     <div class="product-popup">
       <img src="src/assets/product-popup.jpg" alt="Featured product" loading="lazy">
@@ -581,23 +595,23 @@
         <h4>Product Name</h4>
         <p>$500</p>
         <div class="colors">
-          <span class="color black"></span>
-          <span class="color gray"></span>
+          <span class="product-color-swatch black"></span>
+          <span class="product-color-swatch gray"></span>
         </div>
       </div>
     </div>
 
-    <div class="side-dots">
+    <div class="carousel-pagination-dots">
       <span class="active"></span>
       <span></span>
       <span></span>
     </div>
 
-    <div class="like">♡ 5</div>
+    <div class="like-counter">♡ 5</div>
   </div>
 </section>
 
-<section class="best-seller">
+<section class="best-seller" id="best-seller">
   <div class="tabs">
     <span>Best Seller</span>
     <span>New Arrivals</span>
@@ -673,8 +687,8 @@
   <a href="#" class="view-all">View All</a>
 </section>
 
-<section class="subscribe">
-  <video autoplay muted loop playsinline class="bg-video">
+<section class="subscribe" id="subscribe">
+  <video autoplay muted loop playsinline class="bg-video" poster="src/assets/comfort.jpg">
     <source src="src/assets/subscribe.mp4" type="video/mp4">
   </video>
 
@@ -691,7 +705,7 @@
   <div class="features">
     <div class="feature-item">
       <img src="src/assets/lock.png" alt="" loading="lazy">
-      <span>Subscribe and save</span>
+      <span>Exclusive Deals</span>
     </div>
     <div class="feature-item">
       <img src="src/assets/payment.png" alt="" loading="lazy">
@@ -699,16 +713,16 @@
     </div>
     <div class="feature-item">
       <img src="src/assets/delivery.png" alt="" loading="lazy">
-      <span>Fast order turnaround</span>
+      <span>Priority Order</span>
     </div>
     <div class="feature-item">
       <img src="src/assets/reward.png" alt="" loading="lazy">
-      <span>Rewards benefit</span>
+      <span>Reward benefit</span>
     </div>
   </div>
 </section>
 
-<section class="materials">
+<section class="materials" id="materials">
   <h2>Explore by Material</h2>
   <p class="materials-subtitle">
     Discover timeless pieces crafted from the finest wood, glass, fabric, and rattan
@@ -746,7 +760,7 @@
   </div>
 </section>
 
-<section class="inside-design">
+<section class="inside-design" id="inside-design">
   <div class="design-header">
     <h2>Inside the Design</h2>
     <p>Discover the craftsmanship, proportions, and essence behind every piece</p>
@@ -794,7 +808,7 @@
   </div>
 </section>
 
-<section class="testimonials">
+<section class="testimonials" id="testimonials">
   <div class="testimonials-container">
 
     <div class="testimonials-left">
@@ -871,7 +885,7 @@
   </div>
 </section>
 
-<section class="faq">
+<section class="faq" id="faq">
   <div class="faq-container">
 
     <div class="faq-left">
@@ -936,7 +950,7 @@
   </div>
 </section>
 
-<section class="stories">
+<section class="stories" id="stories">
   <h2>Home Stories &amp; Inspirations</h2>
   <p class="section-subtitle">
     Explore inspiring designs and exclusive offers to transform your home
@@ -1013,7 +1027,7 @@
   <a href="#" class="view-alls">View All</a>
 </section>
 
-<section class="inspirations">
+<section class="inspirations" id="inspirations">
   <span class="tags">Ceramic Table Lamp</span>
   <h2>Find Your Home Inspiration</h2>
 
@@ -1156,7 +1170,7 @@
   <div class="footer-watermark">suna</div>
 
 </footer>
-<script type="module" src="src/js/main.js"></script>
+<script type="module" src="/src/js/main.js"></script>
 
 </body>
 </html>
