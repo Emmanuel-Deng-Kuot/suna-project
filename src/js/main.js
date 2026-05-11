@@ -3,6 +3,7 @@ import '../styles/main.scss';
 import Header from '../components/header.js';
 import MobileMenu from '../components/mobile-menu.js';
 import { initAllSliders } from '../components/slider.js';
+import { initAllSwipers } from '../components/swiper-sliders.js';
 import { initAllDropdowns } from '../components/dropdown.js';
 import { initBestSellerTabs } from '../components/tabs.js';
 import Countdown from '../components/countdown.js';
@@ -30,11 +31,14 @@ function initializeApp() {
   // 3. Sliders (ABOVE-THE-FOLD - hero, carousel visible)
   const sliders = initAllSliders();
 
+  // 3.5. New Swiper sliders (Categories, Collection, Inspiration)
+  const swipers = initAllSwipers();
+
   // 4. Dropdowns (CRITICAL - user interaction)
   const dropdowns = initAllDropdowns();
 
   // 5-7. Defer non-critical components to next frame
-  const components = { header, mobileMenu, sliders, dropdowns };
+  const components = { header, mobileMenu, sliders, swipers, dropdowns };
 
   // Use requestIdleCallback for low-priority initialization
   if ('requestIdleCallback' in window) {

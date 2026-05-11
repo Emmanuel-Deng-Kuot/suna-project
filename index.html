@@ -137,49 +137,63 @@
     Explore our furniture by room, designed to bring balance, comfort, and timeless beauty
   </p>
 
-  <div class="cards">
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <div class="category-card">
+          <img src="src/assets/couch.jpg" alt="Living Room" loading="lazy">
+          <div class="category-card__overlay">
+            <h3>Living Room</h3>
+            <p>Warmth and life for your home</p>
+          </div>
+        </div>
+      </div>
 
-    <div class="category-card">
-      <img src="src/assets/couch.jpg" alt="Living Room" loading="lazy">
-      <div class="category-card__overlay">
-        <h3>Living Room</h3>
-        <p>Warmth and life for your home</p>
+      <div class="swiper-slide">
+        <div class="category-card">
+          <img src="src/assets/kitchen.jpg" alt="Kitchen" loading="lazy">
+          <div class="category-card__overlay">
+            <h3>Kitchen</h3>
+            <p>Modern kitchen, endless creativity</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="swiper-slide">
+        <div class="category-card">
+          <img src="src/assets/bedroom.jpg" alt="Bedroom" loading="lazy">
+          <div class="category-card__overlay">
+            <h3>Bedroom</h3>
+            <p>Comfort and style for your rest</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="swiper-slide">
+        <div class="category-card">
+          <img src="src/assets/outdoor.jpg" alt="Outdoor" loading="lazy">
+          <div class="category-card__overlay">
+            <h3>Outdoor</h3>
+            <p>Create your cozy outdoor escape</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="swiper-slide">
+        <div class="category-card">
+          <img src="src/assets/workoffice.png" alt="Work Office" loading="lazy">
+          <div class="category-card__overlay">
+            <h3>Work Office</h3>
+            <p>Where comfort meets productivity</p>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="category-card">
-      <img src="src/assets/kitchen.jpg" alt="Kitchen" loading="lazy">
-      <div class="category-card__overlay">
-        <h3>Kitchen</h3>
-        <p>Modern kitchen, endless creativity</p>
-      </div>
-    </div>
-
-    <div class="category-card">
-      <img src="src/assets/bedroom.jpg" alt="Bedroom" loading="lazy">
-      <div class="category-card__overlay">
-        <h3>Bedroom</h3>
-        <p>Comfort and style for your rest</p>
-      </div>
-    </div>
-
-    <div class="category-card">
-      <img src="src/assets/outdoor.jpg" alt="Outdoor" loading="lazy">
-      <div class="category-card__overlay">
-        <h3>Outdoor</h3>
-        <p>Create your cozy outdoor escape</p>
-      </div>
-    </div>
-
-    <div class="category-card">
-      <img src="src/assets/workoffice.png" alt="Work Office" loading="lazy">
-      <div class="category-card__overlay">
-        <h3>Work Office</h3>
-        <p>Where comfort meets productivity</p>
-      </div>
-    </div>
-
   </div>
+
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+  <div class="swiper-pagination"></div>
 </section>
 
 <section class="highlight" id="highlight">
@@ -505,67 +519,74 @@
         Collections
       </h2>
       <p>Mix-and-match sets that define comfort</p>
-      <div class="nav-buttons">
-        <button class="btn-prev">‹</button>
-        <button class="btn-next">›</button>
-      </div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
     </div>
 
-    <div class="collection-cards">
-      <div class="set-card">
-        <div class="set-image">
-            <span class="product-badge">New</span>
-          <img src="src/assets/sofa-set.png" alt="Noir Modular Sofa Set" loading="lazy">
-        </div>
-        <div class="set-info">
-          <p class="product-category">Set</p>
-          <h3>Noir Modular Sofa Set</h3>
-            <span class="product-price">$250</span>
-          <div class="variants">
-            <img src="src/assets/sofa-set.png" alt="Sofa set variant 1" loading="lazy">
-            <img src="src/assets/sofa-set2.png" alt="Sofa set variant 2" loading="lazy">
-            <img src="src/assets/sofa-set3.png" alt="Sofa set variant 3" loading="lazy">
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <div class="set-card">
+            <div class="set-image">
+                <span class="product-badge">New</span>
+              <img src="src/assets/sofa-set.png" alt="Noir Modular Sofa Set" loading="lazy">
+            </div>
+            <div class="set-info">
+              <p class="product-category">Set</p>
+              <h3>Noir Modular Sofa Set</h3>
+                <span class="product-price">$250</span>
+              <div class="variants">
+                <img src="src/assets/sofa-set.png" alt="Sofa set variant 1" loading="lazy">
+                <img src="src/assets/sofa-set2.png" alt="Sofa set variant 2" loading="lazy">
+                <img src="src/assets/sofa-set3.png" alt="Sofa set variant 3" loading="lazy">
+              </div>
+              <div class="rating">⭐ 5.0 <span>(1,000+ Review)</span></div>
+            </div>
           </div>
-          <div class="rating">⭐ 5.0 <span>(1,000+ Review)</span></div>
         </div>
-      </div>
 
-      <div class="set-card">
-        <div class="set-image">
-            <span class="product-badge">New</span>
-          <img src="src/assets/dinning.png" alt="Aven Oak Dining Set" loading="lazy">
-        </div>
-        <div class="set-info">
-          <p class="product-category">Set</p>
-          <h3>Aven Oak Dining Set</h3>
-            <span class="product-price">$210</span>
-          <div class="variants">
-            <img src="src/assets/dinning.png" alt="Dining set variant 1" loading="lazy">
-            <img src="src/assets/dinning2.png" alt="Dining set variant 2" loading="lazy">
-            <img src="src/assets/dinning3.png" alt="Dining set variant 3" loading="lazy">
+        <div class="swiper-slide">
+          <div class="set-card">
+            <div class="set-image">
+                <span class="product-badge">New</span>
+              <img src="src/assets/dinning.png" alt="Aven Oak Dining Set" loading="lazy">
+            </div>
+            <div class="set-info">
+              <p class="product-category">Set</p>
+              <h3>Aven Oak Dining Set</h3>
+                <span class="product-price">$210</span>
+              <div class="variants">
+                <img src="src/assets/dinning.png" alt="Dining set variant 1" loading="lazy">
+                <img src="src/assets/dinning2.png" alt="Dining set variant 2" loading="lazy">
+                <img src="src/assets/dinning3.png" alt="Dining set variant 3" loading="lazy">
+              </div>
+              <div class="rating">⭐ 5.0 <span>(470 Review)</span></div>
+            </div>
           </div>
-          <div class="rating">⭐ 5.0 <span>(470 Review)</span></div>
         </div>
-      </div>
 
-      <div class="set-card">
-        <div class="set-image">
-          <img src="src/assets/lounge.png" alt="Luno Lounge Chair Set" loading="lazy">
-        </div>
-        <div class="set-info">
-          <p class="product-category">Set</p>
-          <h3>Luno Lounge Chair Set</h3>
-          <span class="product-price">$175</span>
-          <div class="variants">
-            <img src="src/assets/lounge.png" alt="Lounge variant 1" loading="lazy">
-            <img src="src/assets/lounge2.png" alt="Lounge variant 2" loading="lazy">
+        <div class="swiper-slide">
+          <div class="set-card">
+            <div class="set-image">
+              <img src="src/assets/lounge.png" alt="Luno Lounge Chair Set" loading="lazy">
+            </div>
+            <div class="set-info">
+              <p class="product-category">Set</p>
+              <h3>Luno Lounge Chair Set</h3>
+              <span class="product-price">$175</span>
+              <div class="variants">
+                <img src="src/assets/lounge.png" alt="Lounge variant 1" loading="lazy">
+                <img src="src/assets/lounge2.png" alt="Lounge variant 2" loading="lazy">
+              </div>
+              <div class="rating">⭐ 5.0 <span>(140 Review)</span></div>
+            </div>
           </div>
-          <div class="rating">⭐ 5.0 <span>(140 Review)</span></div>
         </div>
       </div>
     </div>
   </div>
 
+  <div class="swiper-pagination"></div>
   <a href="#" class="view-all">View All</a>
 </section>
 
@@ -1031,43 +1052,59 @@
   <span class="tags">Ceramic Table Lamp</span>
   <h2>Find Your Home Inspiration</h2>
 
-  <div class="inspiration-row">
-    <div class="inspiration-card">
-      <img src="src/assets/inspire1.jpg" alt="Home inspiration 1" loading="lazy">
-      <div class="card-footer">
-        <span>home_vision</span>
-        <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">
+        <div class="inspiration-card">
+          <img src="src/assets/inspire1.jpg" alt="Home inspiration 1" loading="lazy">
+          <div class="card-footer">
+            <span>home_vision</span>
+            <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="inspiration-card">
-      <img src="src/assets/inspire2.jpg" alt="Home inspiration 2" loading="lazy">
-      <div class="card-footer">
-        <span>Furniture_lovers</span>
-        <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
+      <div class="swiper-slide">
+        <div class="inspiration-card">
+          <img src="src/assets/inspire2.jpg" alt="Home inspiration 2" loading="lazy">
+          <div class="card-footer">
+            <span>Furniture_lovers</span>
+            <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="inspiration-card">
-      <img src="src/assets/inspire3.jpg" alt="Home inspiration 3" loading="lazy">
-      <div class="card-footer">
-        <span>alexanoel</span>
-        <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
+      <div class="swiper-slide">
+        <div class="inspiration-card">
+          <img src="src/assets/inspire3.jpg" alt="Home inspiration 3" loading="lazy">
+          <div class="card-footer">
+            <span>alexanoel</span>
+            <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="inspiration-card">
-      <img src="src/assets/inspire4.jpg" alt="Home inspiration 4" loading="lazy">
-      <div class="card-footer">
-        <span>sunafurniture</span>
-        <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
+      <div class="swiper-slide">
+        <div class="inspiration-card">
+          <img src="src/assets/inspire4.jpg" alt="Home inspiration 4" loading="lazy">
+          <div class="card-footer">
+            <span>sunafurniture</span>
+            <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="inspiration-card">
-      <img src="src/assets/inspire5.jpg" alt="Home inspiration 5" loading="lazy">
-      <div class="card-footer">
-        <span>nitaananta</span>
-        <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
+      <div class="swiper-slide">
+        <div class="inspiration-card">
+          <img src="src/assets/inspire5.jpg" alt="Home inspiration 5" loading="lazy">
+          <div class="card-footer">
+            <span>nitaananta</span>
+            <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-button-next"></div>
+  <div class="swiper-pagination"></div>
 </section>
 
 </main>

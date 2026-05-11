@@ -305,6 +305,7 @@
   padding: 40px 16px;
   background: $color-white;
   text-align: center;
+  position: relative;
 }
 
 .categories h2 {
@@ -336,37 +337,37 @@
   margin-right: auto;
 }
 
-.cards {
+/* Swiper container for categories */
+.categories .swiper-container {
   display: flex;
   gap: 20px;
   margin-top: 40px;
   padding-bottom: 10px;
-  overflow-x: auto;
+  overflow: hidden;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-radius: 16px;
 }
+
 @media (max-width: 767px) {
-  /* Keep category cards on a single horizontal row (scrollable) */
-  .cards {
-    display: flex;
-    flex-direction: row;
+  .categories .swiper-container {
     gap: 16px;
     margin-top: 28px;
-    padding-bottom: 10px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    flex-wrap: nowrap;
-    scroll-snap-type: x proximity;
     padding-left: 16px;
     padding-right: 16px;
-    align-items: start;
   }
+}
 
-  .cards > .category-card {
-    flex: 0 0 calc(75% - 12px);
-    width: calc(75% - 12px);
-    height: clamp(298px, 36vw, 220px);
-    min-width: 0;
-    scroll-snap-align: start;
-  }
+.categories .swiper-wrapper {
+  display: flex;
+  gap: 16px;
+}
+
+.categories .swiper-slide {
+  flex: 0 0 auto;
+  height: auto;
+  width: auto;
+  min-width: 0;
 }
 
 .category-card {
@@ -377,7 +378,11 @@
   height: clamp(220px, 40vw, 320px);
   border-radius: 16px;
   overflow: hidden;
-  cursor: pointer;
+  cursor: grab;
+}
+
+.category-card:active {
+  cursor: grabbing;
 }
 
 @media (min-width: 768px) {
@@ -385,22 +390,22 @@
     padding: 60px 40px;
   }
 
-  .cards {
-    overflow-x: auto;
+  .categories .swiper-container {
+    padding-left: 0;
+    padding-right: 0;
+    margin-top: 40px;
   }
 
   .category-card {
     min-width: 348px;
-    width: 100%;
-    min-height: 400px;
-    height: auto;
+    width: 348px;
+    height: 400px;
   }
 }
 
 @media (min-width: 1024px) {
-  .cards {
+  .categories .swiper-container {
     justify-content: center;
-    overflow-x: auto;
   }
 }
 
@@ -1648,6 +1653,7 @@
 .collection {
   padding: 40px 16px;
   background: $color-white;
+  position: relative;
 }
 
 .collection-container {
@@ -1660,6 +1666,7 @@
   flex: 1;
   max-width: 100%;
   text-align: center;
+  position: relative;
 }
 
 .collection-left h2 {
@@ -1678,45 +1685,84 @@
   font-family: $font-ui;
 }
 
-.collection .nav-buttons {
-  display: flex;
+.collection .swiper-button-prev,
+.collection .swiper-button-next {
+  position: static;
+  transform: none;
+  width: auto;
+  height: auto;
+  margin: 0;
+  display: inline-flex;
   gap: 10px;
   justify-content: center;
 }
 
-.collection .nav-buttons button {
+.collection .swiper-button-prev::after,
+.collection .swiper-button-next::after {
+  content: none;
+}
+
+.collection .swiper-button-prev,
+.collection .swiper-button-next {
   width: 36px;
   height: 36px;
   border-radius: 50%;
   border: none;
   background: #e5e5e5;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: $color-black;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
-.collection .nav-buttons .btn-next {
+.collection .swiper-button-next {
   background: $color-black;
   color: $color-white;
 }
 
-.collection-cards {
-  flex: 2;
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding-bottom: 10px;
-  scroll-snap-type: x mandatory;
+.collection .swiper-button-prev:hover {
+  background: $color-black;
+  color: $color-white;
 }
 
-.collection-cards::-webkit-scrollbar {
-  height: 4px;
+.collection .swiper-button-next:hover {
+  background: #333;
+}
+
+/* Swiper container for collection */
+.collection .swiper-container {
+  flex: 2;
+  display: flex;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  border-radius: 16px;
+}
+
+.collection .swiper-wrapper {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+.collection .swiper-slide {
+  flex: 0 0 auto;
+  height: auto;
+  scroll-snap-align: start;
 }
 
 .set-card {
   width: 280px;
   min-width: 280px;
   flex: 0 0 auto;
-  scroll-snap-align: start;
+  cursor: grab;
+}
+
+.set-card:active {
+  cursor: grabbing;
 }
 
 .set-image {
@@ -1725,7 +1771,7 @@
   border-radius: 16px;
   padding: 20px;
   height: 364px;
-    width: 316px;
+  width: 316px;
   overflow: hidden;
 }
 
@@ -1796,6 +1842,14 @@
   margin-right: auto;
 }
 
+.collection .swiper-pagination {
+  position: static;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
 @media (min-width: 768px) {
   .collection {
     padding: 60px 40px;
@@ -1803,21 +1857,23 @@
 
   .collection-container {
     flex-direction: row;
-    gap: 60px;
+    gap: 119px;
+    align-items: flex-start;
   }
 
   .collection-left {
-    max-width: 400px;
+    max-width: 500px;
     text-align: left;
   }
 
-  .collection .nav-buttons {
+  .collection .swiper-button-prev,
+  .collection .swiper-button-next {
+    position: static;
     justify-content: flex-start;
   }
 
   .set-card {
     width: 316px;
-    min-width: 300px;
   }
 
   .set-card:hover .set-image img {
@@ -3219,6 +3275,7 @@
   padding: 60px 16px;
   background: $color-white;
   text-align: center;
+  position: relative;
 }
 
 .inspirations .tags {
@@ -3241,13 +3298,24 @@
   margin-bottom: 40px;
 }
 
-.inspiration-row {
+/* Swiper container for inspiration */
+.inspirations .swiper-container {
+  display: flex;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  border-radius: 16px;
+}
+
+.inspirations .swiper-wrapper {
   display: flex;
   gap: 20px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
+  width: 100%;
+}
+
+.inspirations .swiper-slide {
+  flex: 0 0 auto;
+  height: auto;
+  scroll-snap-align: start;
 }
 
 .inspiration-card {
@@ -3257,6 +3325,11 @@
   border-radius: 16px;
   overflow: hidden;
   flex-shrink: 0;
+  cursor: grab;
+}
+
+.inspiration-card:active {
+  cursor: grabbing;
 }
 
 .inspiration-card > img {
@@ -3285,6 +3358,75 @@
   width: 18px;
   height: 18px;
   object-fit: contain;
+}
+
+.inspirations .swiper-button-prev,
+.inspirations .swiper-button-next {
+  position: absolute;
+  top: -50px;
+  width: 40px;
+  height: 40px;
+  background: $color-black;
+  color: $color-white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.inspirations .swiper-button-prev::after,
+.inspirations .swiper-button-next::after {
+  content: none;
+}
+
+.inspirations .swiper-button-prev::before {
+  content: "‹";
+  font-size: 24px;
+}
+
+.inspirations .swiper-button-next::before {
+  content: "›";
+  font-size: 24px;
+}
+
+.inspirations .swiper-button-prev {
+  right: 60px;
+}
+
+.inspirations .swiper-button-next {
+  right: 10px;
+}
+
+.inspirations .swiper-button-prev:hover,
+.inspirations .swiper-button-next:hover {
+  background: #333;
+  transform: scale(1.1);
+}
+
+.inspirations .swiper-pagination {
+  position: static;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.inspirations .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: $color-black;
+  opacity: 0.3;
+  cursor: pointer;
+}
+
+.inspirations .swiper-pagination-bullet-active {
+  background: $color-black;
+  opacity: 1;
 }
 
 @media (min-width: 768px) {
