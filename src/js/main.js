@@ -3,13 +3,13 @@ import '../styles/main.scss';
 import Header from '../components/header.js';
 import MobileMenu from '../components/mobile-menu.js';
 import { initAllSliders } from '../components/slider.js';
-import { initAllSwipers } from '../components/swiper-sliders.js';
 import { initAllDropdowns } from '../components/dropdown.js';
 import { initBestSellerTabs } from '../components/tabs.js';
 import Countdown from '../components/countdown.js';
 import initProductCountdowns from './product-countdown.js';
 import { initAllAnimations } from '../components/animations.js';
 import initFooterAccordion from './footer-accordion.js';
+import initAllGrabCursors from './grab-cursor.js';
 import { onReady } from './utils.js';
 
 /**
@@ -31,14 +31,14 @@ function initializeApp() {
   // 3. Sliders (ABOVE-THE-FOLD - hero, carousel visible)
   const sliders = initAllSliders();
 
-  // 3.5. New Swiper sliders (Categories, Collection, Inspiration)
-  const swipers = initAllSwipers();
+  // 3.5. Grab cursor interactions (CRITICAL - visible interaction feedback)
+  initAllGrabCursors();
 
   // 4. Dropdowns (CRITICAL - user interaction)
   const dropdowns = initAllDropdowns();
 
   // 5-7. Defer non-critical components to next frame
-  const components = { header, mobileMenu, sliders, swipers, dropdowns };
+  const components = { header, mobileMenu, sliders, dropdowns };
 
   // Use requestIdleCallback for low-priority initialization
   if ('requestIdleCallback' in window) {
