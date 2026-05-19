@@ -28,13 +28,13 @@ function animateHeroSlide(heroElement) {
   gsap.set(contentPieces, { autoAlpha: 0, y: 18 });
 
   if (background) {
-    gsap.set(background, { scale: 1.08, opacity: 0.92, transformOrigin: 'center center' });
+    gsap.set(background, { opacity: 0.92, transformOrigin: 'center center' });
   }
 
   const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
   if (background) {
-    timeline.to(background, { scale: 1, opacity: 1, duration: 1.1, ease: 'power2.out' }, 0);
+    timeline.to(background, { opacity: 1, duration: 1.1, ease: 'power2.out' }, 0);
   }
 
   timeline.to(
