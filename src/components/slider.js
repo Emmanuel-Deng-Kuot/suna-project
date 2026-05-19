@@ -1,10 +1,53 @@
 
 import { query, queryAll, addClass, removeClass } from '../js/utils.js';
+import gsap from 'gsap';
 import { Swiper } from 'swiper';
-import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
+import { Autoplay, EffectFade, Pagination, FreeMode } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
+
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function animateHeroSlide(heroElement) {
+  const activeSlide = heroElement?.querySelector('.swiper-slide-active');
+  if (!activeSlide) return;
+
+  const content = activeSlide.querySelector('.hero-content');
+  const background = activeSlide.querySelector('.hero-slide-bg');
+  const contentPieces = content ? Array.from(content.children) : [];
+
+  if (!contentPieces.length) return;
+
+  if (prefersReducedMotion) {
+    gsap.set([background, ...contentPieces], { autoAlpha: 1, opacity: 1, y: 0, scale: 1, clearProps: 'transform,opacity' });
+    return;
+  }
+
+  gsap.killTweensOf([background, ...contentPieces]);
+  gsap.set(contentPieces, { autoAlpha: 0, y: 18 });
+
+  if (background) {
+    gsap.set(background, { scale: 1.08, opacity: 0.92, transformOrigin: 'center center' });
+  }
+
+  const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+  if (background) {
+    timeline.to(background, { scale: 1, opacity: 1, duration: 1.1, ease: 'power2.out' }, 0);
+  }
+
+  timeline.to(
+    contentPieces,
+    {
+      autoAlpha: 1,
+      y: 0,
+      duration: 0.85,
+      stagger: 0.1,
+    },
+    0.12
+  );
+}
 
 /**
  * Dot-based slider (Hero, Inspiration)
@@ -166,31 +209,43 @@ export class DraggableSlider {
 export class AutoScrollingTrack {
   constructor(trackSelector, options = {}) {
     this.track = query(trackSelector);
-    this.speed = options.speed || 0.45;
+    this.speed = options.speed || 0.28;
     this.rafId = null;
     this.lastTimestamp = 0;
     this.loopWidth = 0;
+    this.originalWidth = 0;
     this.isPaused = false;
     this.isActive = false;
     this.resizeObserver = null;
+    this.baseOffset = 0;
+    this.isDragging = false;
+    this.dragStartX = 0;
+    this.dragStartOffset = 0;
+    this.isHovering = false;
     this.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
   init() {
     if (!this.track || this.reducedMotion) return;
 
-    this._resetClones();
-    this._duplicateContent();
-    this._measure();
+    this._refreshTrack();
+    this._applyTrackStyles();
+    this._bindInteractions();
 
     if (window.ResizeObserver) {
-      this.resizeObserver = new ResizeObserver(() => this._measure());
+      this.resizeObserver = new ResizeObserver(() => this._refreshTrack());
       this.resizeObserver.observe(this.track);
     } else {
-      window.addEventListener('resize', () => this._measure(), { passive: true });
+      window.addEventListener('resize', () => this._refreshTrack(), { passive: true });
     }
 
     this._resume();
+  }
+
+  _refreshTrack() {
+    this._resetClones();
+    this._duplicateContent();
+    this._measure();
   }
 
   _resetClones() {
@@ -198,33 +253,128 @@ export class AutoScrollingTrack {
   }
 
   _duplicateContent() {
-    const items = Array.from(this.track.children);
+    const originalItems = Array.from(this.track.children);
 
-    items.forEach((item) => {
-      const clone = item.cloneNode(true);
-      clone.setAttribute('data-track-clone', 'true');
-      clone.setAttribute('aria-hidden', 'true');
-      this.track.appendChild(clone);
-    });
+    if (!originalItems.length) {
+      this.originalWidth = 0;
+      return;
+    }
+
+    this.originalWidth = this.track.scrollWidth;
+    const targetWidth = this.track.clientWidth + this.originalWidth;
+    let currentWidth = this.originalWidth;
+
+    while (currentWidth < targetWidth) {
+      originalItems.forEach((item) => {
+        const clone = item.cloneNode(true);
+        clone.setAttribute('data-track-clone', 'true');
+        clone.setAttribute('aria-hidden', 'true');
+        this.track.appendChild(clone);
+      });
+
+      currentWidth = this.track.scrollWidth;
+    }
+  }
+
+  _applyTrackStyles() {
+    this.track.style.willChange = 'transform';
+    this.track.style.transform = 'translate3d(0, 0, 0)';
+    this.track.style.userSelect = 'none';
+    this.track.style.touchAction = 'pan-y';
+    this.track.style.cursor = 'grab';
   }
 
   _measure() {
-    this.loopWidth = this.track.scrollWidth / 2;
-    this.isActive = this.loopWidth > this.track.clientWidth;
+    this.loopWidth = this.originalWidth || this.track.scrollWidth;
+    this.isActive = this.loopWidth > 0;
 
     if (!this.isActive) {
       this._pause();
-      this.track.scrollLeft = 0;
+      this.baseOffset = 0;
+      this._applyTransform();
       return;
     }
+
+    this.baseOffset = this._normalizeOffset(this.baseOffset);
+    this._applyTransform();
 
     if (!this.rafId && !this.isPaused) {
       this._resume();
     }
   }
 
+  _bindInteractions() {
+    this.track.addEventListener('pointerenter', this._onPointerEnter);
+    this.track.addEventListener('pointerleave', this._onPointerLeave);
+    this.track.addEventListener('pointerdown', this._onPointerDown);
+    window.addEventListener('pointermove', this._onPointerMove);
+    window.addEventListener('pointerup', this._onPointerUp);
+    window.addEventListener('pointercancel', this._onPointerUp);
+  }
+
+  _normalizeOffset(offset) {
+    if (!this.loopWidth) return 0;
+
+    let normalized = offset % this.loopWidth;
+    if (normalized < 0) {
+      normalized += this.loopWidth;
+    }
+
+    return normalized;
+  }
+
+  _applyTransform() {
+    const offset = this._normalizeOffset(this.baseOffset);
+    this.baseOffset = offset;
+    this.track.style.transform = `translate3d(${-offset}px, 0, 0)`;
+  }
+
+  _onPointerEnter = () => {
+    this.isHovering = true;
+    this._pause();
+  };
+
+  _onPointerLeave = () => {
+    this.isHovering = false;
+
+    if (!this.isDragging) {
+      this._resume();
+    }
+  };
+
+  _onPointerDown = (event) => {
+    if (!this.isActive || event.button !== 0) return;
+
+    this.isDragging = true;
+    this.dragStartX = event.clientX;
+    this.dragStartOffset = this.baseOffset;
+    this._pause();
+
+    if (this.track.setPointerCapture) {
+      this.track.setPointerCapture(event.pointerId);
+    }
+  };
+
+  _onPointerMove = (event) => {
+    if (!this.isDragging) return;
+
+    const deltaX = event.clientX - this.dragStartX;
+    this.baseOffset = this.dragStartOffset - deltaX;
+    this._applyTransform();
+  };
+
+  _onPointerUp = () => {
+    if (!this.isDragging) return;
+
+    this.isDragging = false;
+
+    if (!this.isHovering) {
+      this._resume();
+    }
+  };
+
   _tick = (timestamp) => {
-    if (!this.isActive || this.isPaused) {
+    if (!this.isActive || this.isPaused || this.isDragging) {
       this.rafId = null;
       this.lastTimestamp = 0;
       return;
@@ -236,11 +386,8 @@ export class AutoScrollingTrack {
 
     const delta = timestamp - this.lastTimestamp;
     const distance = (this.speed * delta) / 16.666;
-    this.track.scrollLeft += distance;
-
-    if (this.track.scrollLeft >= this.loopWidth) {
-      this.track.scrollLeft -= this.loopWidth;
-    }
+    this.baseOffset += distance;
+    this._applyTransform();
 
     this.lastTimestamp = timestamp;
     this.rafId = window.requestAnimationFrame(this._tick);
@@ -305,6 +452,8 @@ export function initHeroSwiper() {
     speed: 800,
   });
 
+  animateHeroSlide(heroElement);
+
   const placePaginationInActiveContent = () => {
     if (!paginationEl) return;
 
@@ -320,8 +469,146 @@ export function initHeroSwiper() {
   heroSwiper.on('init', placePaginationInActiveContent);
   heroSwiper.on('slideChangeTransitionEnd', placePaginationInActiveContent);
   heroSwiper.on('resize', placePaginationInActiveContent);
+  heroSwiper.on('slideChangeTransitionEnd', () => animateHeroSlide(heroElement));
 
   return heroSwiper;
+}
+
+/**
+ * Initialize Category Swiper with responsive breakpoints
+ */
+export function initCategorySwiper() {
+  const categoryElement = query('#categories .cards');
+
+  if (!categoryElement) {
+    console.warn('[Slider] Categories element not found');
+    return null;
+  }
+
+  const categorySwiper = new Swiper(categoryElement, {
+    modules: [FreeMode],
+    slidesPerView: 1.2,
+    spaceBetween: 16,
+    freeMode: true,
+    watchSlidesProgress: true,
+    grabCursor: true,
+    breakpoints: {
+      320: {
+        slidesPerView: 1.05,
+        spaceBetween: 12,
+      },
+      640: {
+        slidesPerView: 1.3,
+        spaceBetween: 14,
+      },
+      768: {
+        slidesPerView: 2,
+        spaceBetween: 16,
+      },
+      1024: {
+        slidesPerView: 3,
+        spaceBetween: 20,
+      },
+      1280: {
+        slidesPerView: 3.5,
+        spaceBetween: 24,
+      },
+    },
+  });
+
+  return categorySwiper;
+}
+
+/**
+ * Initialize Inspiration Swiper with cinematic feel
+ */
+export function initInspirationSwiper() {
+  const inspirationElement = query('#inspirations .inspiration-row');
+
+  if (!inspirationElement) {
+    console.warn('[Slider] Inspiration section not found');
+    return null;
+  }
+
+  const inspirationSwiper = new Swiper(inspirationElement, {
+    modules: [FreeMode],
+    slidesPerView: 1.1,
+    spaceBetween: 12,
+    freeMode: true,
+    watchSlidesProgress: true,
+    grabCursor: true,
+    speed: 600,
+    breakpoints: {
+      320: {
+        slidesPerView: 1.05,
+        spaceBetween: 10,
+      },
+      480: {
+        slidesPerView: 1.2,
+        spaceBetween: 12,
+      },
+      640: {
+        slidesPerView: 1.5,
+        spaceBetween: 12,
+      },
+      768: {
+        slidesPerView: 2,
+        spaceBetween: 14,
+      },
+      1024: {
+        slidesPerView: 3,
+        spaceBetween: 16,
+      },
+      1280: {
+        slidesPerView: 4,
+        spaceBetween: 20,
+      },
+    },
+  });
+
+  return inspirationSwiper;
+}
+
+/**
+ * Initialize Testimonials Swiper with responsive breakpoints
+ */
+export function initTestimonialsSwiper() {
+  const testimonialsElement = query('.testimonials-slider');
+
+  if (!testimonialsElement) {
+    console.warn('[Slider] Testimonials element not found');
+    return null;
+  }
+
+  const testimonialsSwiper = new Swiper(testimonialsElement, {
+    modules: [FreeMode],
+    slidesPerView: 1,
+    spaceBetween: 16,
+    freeMode: true,
+    watchSlidesProgress: true,
+    grabCursor: true,
+    speed: 600,
+    breakpoints: {
+      320: {
+        slidesPerView: 1,
+        spaceBetween: 12,
+      },
+      640: {
+        slidesPerView: 1.2,
+        spaceBetween: 14,
+      },
+      768: {
+        slidesPerView: 1.5,
+        spaceBetween: 16,
+      },
+      1024: {
+        slidesPerView: 2,
+        spaceBetween: 20,
+      },
+    },
+  });
+
+  return testimonialsSwiper;
 }
 
 /**
@@ -335,19 +622,28 @@ export function initAllSliders() {
   const collectionCarousel = new Carousel('.collection-cards', '.collection .btn-prev', '.collection .btn-next');
   collectionCarousel.init();
 
-  // Testimonials draggable slider
-  const testimonialsSlider = new DraggableSlider('.testimonials-slider');
-  testimonialsSlider.init();
+  // Testimonials Swiper
+  const testimonialsSwiper = initTestimonialsSwiper();
 
   // Inspiration dots
   const inspirationDots = new DotSlider('.inspiration-wrapper .carousel-pagination-dots span', { autoPlayDelay: 3500 });
   inspirationDots.init();
 
   // Feature tracks marquee
-  const featureTracks = new AutoScrollingTrack('.features-carousel', { speed: 0.5 });
+  const featureTracks = new AutoScrollingTrack('.features-carousel', { speed: 0.8 });
   featureTracks.init();
 
-  return { heroSwiper, collectionCarousel, testimonialsSlider, inspirationDots, featureTracks };
+  // Brand logos marquee
+  const brandTracks = new AutoScrollingTrack('.brand-wrapper', { speed: 0.8 });
+  brandTracks.init();
+
+  // Category cards Swiper
+  const categorySwiper = initCategorySwiper();
+
+  // Inspiration cards Swiper
+  const inspirationSwiper = initInspirationSwiper();
+
+  return { heroSwiper, collectionCarousel, testimonialsSwiper, inspirationDots, featureTracks, brandTracks, categorySwiper, inspirationSwiper };
 }
 
 export default DotSlider;

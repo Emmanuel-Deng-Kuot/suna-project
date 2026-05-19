@@ -5,7 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: $color-olive;
+  background: $color-accent-2;
   color: $color-white;
   padding: 12px 4px;
   font-family: $font-ui;
@@ -144,6 +144,14 @@ header {
 @include respond-up($bp-lg) {
   .top-header {
     padding: 18px 40px;
+
+  .header-icons .custom-select-toggle {
+    color: $color-text;
+  }
+
+  .announcement-right .custom-select-toggle {
+    color: $color-white;
+  }
   }
 
   .search-wrapper {
@@ -194,6 +202,30 @@ header {
   height: auto;
 }
 
+.cart-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #dc412d;
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
 .select-language {
   border: none;
   background: transparent;
@@ -224,12 +256,14 @@ header {
   height: 30px;
   flex-direction: column;
   gap: 4px;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hamburger img {
   width: clamp(16px, 4.5vw, 22px);
   height: auto;
   max-width: 22px;
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hamburger span {
@@ -238,11 +272,41 @@ header {
   height: 2px;
   background: $color-text;
   border-radius: 999px;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transform-origin: center;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .hamburger.active img {
-  transform: rotate(90deg);
+  opacity: 0;
+  transform: scale(0.88);
+}
+
+@media (max-width: 767px) {
+  .navbar .hamburger.active {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    right: auto;
+    z-index: 1301;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: $color-white;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+    transform: translateZ(0);
+  }
+
+  .navbar .hamburger.active span {
+    width: 20px;
+  }
+
+  .navbar .hamburger.active span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  .navbar .hamburger.active span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
 }
 
 .hamburger.active span:nth-child(1) {
@@ -251,6 +315,7 @@ header {
 
 .hamburger.active span:nth-child(2) {
   opacity: 0;
+  transform: scaleX(0.2);
 }
 
 .hamburger.active span:nth-child(3) {
@@ -271,18 +336,27 @@ header {
   max-width: 320px;
   height: 100vh;
   background: $color-white;
-  z-index: $z-nav;
-  transition: left 0.3s ease;
+  z-index: 1100;
+  transform: translateX(-105%);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.6s;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-  overflow-x: auto;
+
 }
 
 .navbar.active {
-  left: 0;
+  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
 }
 
 .navbar.open {
-  left: 0;
+  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
 }
 
 .navbar a {
@@ -296,6 +370,50 @@ header {
   padding: 8px 0;
 }
 
+.navbar-toggle {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  font: inherit;
+}
+
+.navbar-item-dropdown {
+  position: relative;
+}
+
+.navbar-dropdown {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-item-dropdown > .navbar-dropdown {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity 0.24s ease, transform 0.24s ease, max-height 0.24s ease, visibility 0.24s ease;
+}
+
+.navbar-item-dropdown.open > .navbar-dropdown {
+  max-height: 360px;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.navbar-dropdown a {
+  display: block;
+  font-size: 14px;
+  padding: 6px 0;
+}
+
 .nav-overlay {
   position: fixed;
   top: 0;
@@ -303,7 +421,7 @@ header {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  z-index: $z-overlay;
+  z-index: 900;
   opacity: 0;
   visibility: hidden;
   transition: 0.3s;
@@ -332,11 +450,74 @@ header {
     box-shadow: none;
     background: transparent;
     left: auto;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    align-items: center;
   }
 
   .navbar a {
     font-size: 16px;
     padding: 0;
+  }
+
+  .navbar-toggle {
+    width: auto;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .navbar-item-dropdown {
+    /* keep parent in normal flow but positioned for absolute dropdown */
+    display: block;
+  }
+  .navbar-item-dropdown > .navbar-dropdown {
+    /* floating overlay menu on desktop */
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    min-width: 190px;
+    padding: 12px 0;
+    border-radius: 14px;
+    background: $color-white;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+    /* ensure dropdown floats above other content */
+    z-index: 1200;
+    /* start slightly higher and fade/slide into place */
+    transform: translateY(-8px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    max-height: none;
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+  }
+
+  /* show on hover, focus, or when JS adds .open */
+  .navbar-item-dropdown:hover > .navbar-dropdown,
+  .navbar-item-dropdown:focus-within > .navbar-dropdown,
+  .navbar-item-dropdown.open > .navbar-dropdown {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .navbar-dropdown a {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .navbar-dropdown a:hover,
+  .navbar-dropdown a:focus-visible {
+    background: $color-brand-soft;
+    color: $color-accent;
+  }
+
+  .navbar-toggle:focus-visible,
+  .navbar a:focus-visible {
+    outline: 2px solid $color-accent;
+    outline-offset: 4px;
+    border-radius: 4px;
   }
 
   .navbar a::after {
@@ -353,6 +534,69 @@ header {
   .navbar a:hover::after {
     width: 100%;
   }
+}
+
+/* Custom text-only select styles */
+.custom-select {
+  position: relative; /* parent is relative so menu can be absolute */
+  display: inline-block;
+  vertical-align: middle;
+  font-family: $font-ui;
+}
+
+.custom-select-toggle {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #fff;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.custom-select .custom-select-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 140px;
+  background: $color-white;
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  padding: 6px 0;
+  z-index: 1400; /* above navbar/content */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s;
+  pointer-events: none;
+}
+
+.custom-select .custom-select-search { width: 100%; padding: 8px 10px; box-sizing: border-box; border-radius: 6px; border: 1px solid #eee; margin-bottom: 6px; }
+
+.custom-select-list { list-style: none; margin: 0; padding: 0; max-height: 240px; overflow: auto; }
+.custom-select-option { padding: 8px 12px; cursor: pointer; font-size: 14px; }
+.custom-select-option:hover, .custom-select-option:focus { background: $color-brand-soft; color: $color-accent; }
+
+/* hidden by default; JS toggles .open on wrapper */
+.custom-select .custom-select-menu[aria-hidden="true"] {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
+.custom-select.open .custom-select-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+@include respond-up($bp-md) {
+  /* ensure selects align with header icons */
+  .header-icons .custom-select { margin-left: 8px; }
 }
 
 @include respond-down($bp-md) {
@@ -419,11 +663,54 @@ header {
   }
 
   .navbar {
-    display: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 64px 20px 20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80%;
+    max-width: 320px;
+    height: 100vh;
+    background: $color-white;
+    z-index: 1100;
+    transform: translateX(-105%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.6s;
   }
 
   .navbar.open,
   .navbar.active {
-    display: flex;
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s;
+  }
+
+  .navbar-item-dropdown {
+    width: 100%;
+  }
+
+  .navbar-toggle {
+    padding: 8px 0;
+    color: $color-text;
+    font-size: 18px;
+    font-family: $font-ui;
+    font-weight: 400;
+  }
+
+  .navbar-item-dropdown > .navbar-dropdown {
+    margin-top: 4px;
+    padding-left: 14px;
+  }
+
+  .navbar-dropdown a {
+    color: $color-muted;
+    padding: 6px 0;
   }
 }

@@ -1,10 +1,29 @@
-/**
- * Animations Component
- * Handles scroll reveal, lazy loading, FAQs, product interactions, etc.
- * Modular and reusable patterns with event delegation
- */
 
 import { query, queryAll, addClass, removeClass } from '../js/utils.js';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const revealEase = 'power3.out';
+const buttonEase = 'power2.out';
+const textRevealEase = 'power4.out';
+
+function collectElements(selectors) {
+  return selectors.flatMap((selector) => queryAll(selector)).filter(Boolean);
+}
+
+function collectScopedElements(scope, selectors) {
+  return selectors.flatMap((selector) => queryAll(selector, scope)).filter(Boolean);
+}
+
+function isInInitialViewport(element, threshold = 0.15) {
+  const rect = element.getBoundingClientRect();
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+
+  return rect.top < viewportHeight * (1 - threshold) && rect.bottom > 0;
+}
 
 /**
  * Scroll Reveal on intersection
@@ -16,29 +35,42 @@ export class ScrollReveal {
     this.rootMargin = options.rootMargin || '0px 0px -20px 0px';
     this.revealClass = options.revealClass || 'reveal';
     this.visibleClass = options.visibleClass || 'reveal-visible';
+    this.yOffset = options.yOffset || 28;
+    this.duration = options.duration || 0.9;
   }
 
   init() {
-    const targets = this.selectors.join(', ');
-    const elements = queryAll(targets);
+    const elements = collectElements(this.selectors);
 
     if (!elements.length) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            addClass(entry.target, this.visibleClass);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: this.threshold, rootMargin: this.rootMargin }
-    );
+    if (prefersReducedMotion) {
+      gsap.set(elements, { autoAlpha: 1, y: 0, clearProps: 'transform,opacity' });
+      return;
+    }
 
     elements.forEach((el) => {
       addClass(el, this.revealClass);
-      observer.observe(el);
+      gsap.fromTo(
+        el,
+        {
+          autoAlpha: 0,
+          y: this.yOffset,
+        },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: this.duration,
+          ease: revealEase,
+          overwrite: 'auto',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 82%',
+            toggleActions: 'play none none none',
+            once: true,
+          },
+        }
+      );
     });
   }
 }
@@ -110,10 +142,75 @@ export class FAQAccordion {
 }
 
 /**
+ * Shopping Cart Management
+ */
+export class ShoppingCart {
+  constructor() {
+    this.items = [];
+    this.cartCountEl = query('#cart-count');
+    this.loadCart();
+  }
+
+  loadCart() {
+    const stored = localStorage.getItem('suna-cart');
+    if (stored) {
+      try {
+        this.items = JSON.parse(stored);
+      } catch (e) {
+        this.items = [];
+      }
+    }
+    this.updateUI();
+  }
+
+  addItem(product) {
+    const { name, price, image } = product;
+    const existingItem = this.items.find((item) => item.name === name);
+
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      this.items.push({ name, price, image, quantity: 1, id: Date.now() });
+    }
+
+    this.saveCart();
+    this.updateUI();
+    console.log(`[Cart] Added: ${name} (Total items: ${this.getTotalCount()})`);
+  }
+
+  saveCart() {
+    localStorage.setItem('suna-cart', JSON.stringify(this.items));
+  }
+
+  updateUI() {
+    const count = this.getTotalCount();
+    if (this.cartCountEl) {
+      this.cartCountEl.textContent = count;
+      this.cartCountEl.style.display = count > 0 ? 'flex' : 'none';
+    }
+  }
+
+  getTotalCount() {
+    return this.items.reduce((sum, item) => sum + item.quantity, 0);
+  }
+
+  getItems() {
+    return this.items;
+  }
+
+  clear() {
+    this.items = [];
+    this.saveCart();
+    this.updateUI();
+  }
+}
+
+/**
  * Product Card Interactions
  */
 export class ProductCardInteractions {
-  constructor() {
+  constructor(cart) {
+    this.cart = cart;
     this.cartSelector = '.btn-add-to-cart, .buy-btn';
     this.quickViewSelector = '.btn-quick-view';
     this.variantSelector = '.variants img';
@@ -127,13 +224,27 @@ export class ProductCardInteractions {
 
   _initCartButtons() {
     document.addEventListener('click', (e) => {
-      if (e.target.matches(this.cartSelector)) {
-        this._handleAddToCart(e.target);
+      const button = e.target.closest(this.cartSelector);
+      if (button) {
+        this._handleAddToCart(button);
       }
     });
   }
 
   _handleAddToCart(btn) {
+    const card = btn.closest('.product-card, .set-card');
+    if (!card) return;
+
+    const name = query('h3, h4', card)?.textContent?.trim() || 'Product';
+    const priceText = query('.product-price', card)?.textContent?.trim() || '$0';
+    const imageEl = query('.product-image img, .set-image img, .image-box img', card);
+    const image = imageEl?.src || '';
+
+    // Add to cart
+    if (this.cart) {
+      this.cart.addItem({ name, price: priceText, image });
+    }
+
     const originalText = btn.textContent;
     const originalBgColor = btn.style.backgroundColor;
 
@@ -141,11 +252,19 @@ export class ProductCardInteractions {
     btn.style.backgroundColor = '#4CAF50';
     btn.disabled = true;
 
-    const card = btn.closest('.product-card, .set-card');
-    if (card) {
-      const name = query('h3, h4', card)?.textContent || 'Product';
-      const price = query('.product-price', card)?.textContent || '';
-      console.log(`[Cart] Added: ${name} - ${price}`);
+    if (!prefersReducedMotion) {
+      gsap.fromTo(
+        btn,
+        { scale: 1 },
+        {
+          scale: 1.04,
+          duration: 0.18,
+          ease: buttonEase,
+          yoyo: true,
+          repeat: 1,
+          overwrite: 'auto',
+        }
+      );
     }
 
     setTimeout(() => {
@@ -157,8 +276,9 @@ export class ProductCardInteractions {
 
   _initQuickView() {
     document.addEventListener('click', (e) => {
-      if (e.target.matches(this.quickViewSelector)) {
-        this._handleQuickView(e.target);
+      const button = e.target.closest(this.quickViewSelector);
+      if (button) {
+        this._handleQuickView(button);
       }
     });
   }
@@ -175,8 +295,9 @@ export class ProductCardInteractions {
 
   _initVariants() {
     document.addEventListener('click', (e) => {
-      if (e.target.matches(this.variantSelector)) {
-        this._handleVariantClick(e.target);
+      const variant = e.target.closest(this.variantSelector);
+      if (variant) {
+        this._handleVariantClick(variant);
       }
     });
   }
@@ -187,7 +308,32 @@ export class ProductCardInteractions {
     const mainImg = card?.querySelector('.product-image img, .set-image img, .image-box img');
 
     if (mainImg && variant.src) {
-      mainImg.src = variant.src;
+      if (prefersReducedMotion) {
+        mainImg.src = variant.src;
+      } else {
+        gsap.killTweensOf(mainImg);
+        gsap.to(mainImg, {
+          opacity: 0,
+          scale: 0.985,
+          duration: 0.18,
+          ease: buttonEase,
+          overwrite: 'auto',
+          onComplete: () => {
+            mainImg.src = variant.src;
+            gsap.fromTo(
+              mainImg,
+              { opacity: 0, scale: 1.015 },
+              {
+                opacity: 1,
+                scale: 1,
+                duration: 0.45,
+                ease: revealEase,
+                overwrite: 'auto',
+              }
+            );
+          },
+        });
+      }
 
       // Remove selected from siblings
       const allVariants = queryAll('img', variant.parentElement);
@@ -226,6 +372,241 @@ export class Wishlist {
     this.count += this.liked ? 1 : -1;
     this.likeEl.innerHTML = `${this.liked ? '♥' : '♡'} ${this.count}`;
     this.likeEl.style.color = this.liked ? '#DC412D' : '';
+
+    if (!prefersReducedMotion) {
+      gsap.fromTo(
+        this.likeEl,
+        { scale: 1 },
+        {
+          scale: 1.08,
+          duration: 0.18,
+          ease: buttonEase,
+          yoyo: true,
+          repeat: 1,
+          overwrite: 'auto',
+        }
+      );
+    }
+  }
+}
+
+/**
+ * Premium hover/tap interactions
+ */
+export class PremiumUIInteractions {
+  constructor() {
+    this.buttonSelector = [
+      'button',
+      '.view-all',
+      '.view-alls',
+      '.like-counter',
+      '.tabs span',
+      '.carousel-pagination-dots span',
+    ].join(', ');
+    this.cardSelector = [
+      '.category-card',
+      '.product-card',
+      '.set-card',
+      '.home-card',
+      '.story-card',
+      '.material-card',
+      '.design-item',
+      '.testimonial-card',
+      '.inspiration-card',
+      '.feature-items',
+    ].join(', ');
+  }
+
+  init() {
+    if (prefersReducedMotion) return;
+
+    this._initButtons();
+    this._initCards();
+  }
+
+  _initButtons() {
+    queryAll(this.buttonSelector).forEach((button) => {
+      button.style.transformOrigin = 'center center';
+
+      button.addEventListener('mouseenter', () => {
+        gsap.to(button, {
+          y: -2,
+          scale: 1.01,
+          duration: 0.28,
+          ease: buttonEase,
+          overwrite: 'auto',
+        });
+      });
+
+      button.addEventListener('mouseleave', () => {
+        gsap.to(button, {
+          y: 0,
+          scale: 1,
+          duration: 0.32,
+          ease: buttonEase,
+          overwrite: 'auto',
+        });
+      });
+
+      button.addEventListener('focus', () => {
+        gsap.to(button, {
+          y: -1,
+          scale: 1.01,
+          duration: 0.2,
+          ease: buttonEase,
+          overwrite: 'auto',
+        });
+      });
+
+      button.addEventListener('blur', () => {
+        gsap.to(button, {
+          y: 0,
+          scale: 1,
+          duration: 0.24,
+          ease: buttonEase,
+          overwrite: 'auto',
+        });
+      });
+    });
+  }
+
+  _initCards() {
+    const supportsHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+
+    queryAll(this.cardSelector).forEach((card) => {
+      const image = query('img', card);
+
+      card.style.transformOrigin = 'center center';
+      card.style.willChange = 'transform';
+      card.style.backfaceVisibility = 'hidden';
+
+      if (image) {
+        image.style.transformOrigin = 'center center';
+        image.style.willChange = 'transform';
+        image.style.backfaceVisibility = 'hidden';
+      }
+
+      const enter = (e) => {
+        if (e && e.pointerType && e.pointerType !== 'mouse') return;
+        gsap.killTweensOf(card);
+        gsap.to(card, {
+          y: -6,
+          duration: 0.36,
+          ease: 'power3.out',
+          overwrite: 'auto',
+        });
+
+        if (image) {
+          gsap.killTweensOf(image);
+          gsap.to(image, {
+            y: -8,
+            scale: 1.04,
+            duration: 0.6,
+            ease: 'power3.out',
+            overwrite: 'auto',
+          });
+        }
+      };
+
+      const leave = (e) => {
+        if (e && e.pointerType && e.pointerType !== 'mouse') return;
+        gsap.killTweensOf(card);
+        gsap.to(card, {
+          y: 0,
+          duration: 0.45,
+          ease: 'power3.out',
+          overwrite: 'auto',
+        });
+
+        if (image) {
+          gsap.killTweensOf(image);
+          gsap.to(image, {
+            y: 0,
+            scale: 1,
+            duration: 0.7,
+            ease: 'power4.out',
+            overwrite: 'auto',
+          });
+        }
+      };
+
+      if (supportsHover) {
+        card.addEventListener('pointerenter', enter);
+        card.addEventListener('pointerleave', leave);
+        card.addEventListener('focus', (e) => {
+          // keyboard focus should also show a subtle lift
+          gsap.killTweensOf(card);
+          gsap.to(card, { y: -3, duration: 0.28, ease: buttonEase, overwrite: 'auto' });
+
+          if (image) {
+            gsap.killTweensOf(image);
+            gsap.to(image, { y: -4, scale: 1.02, duration: 0.32, ease: buttonEase, overwrite: 'auto' });
+          }
+        });
+        card.addEventListener('blur', leave);
+      }
+    });
+  }
+}
+
+/**
+ * Premium text reveal timelines
+ */
+export class TextReveal {
+  constructor(groups = []) {
+    this.groups = groups;
+  }
+
+  init() {
+    if (!this.groups.length) return;
+
+    if (prefersReducedMotion) {
+      this.groups.forEach(({ scope, selectors = [] }) => {
+        queryAll(scope).forEach((container) => {
+          const elements = collectScopedElements(container, selectors);
+          gsap.set(elements, { opacity: 1, y: 0, clearProps: 'transform,opacity' });
+        });
+      });
+      return;
+    }
+
+    this.groups.forEach(({ scope, selectors = [], start = 'top 84%', y = 48, duration = 0.95, stagger = 0.12, ease = textRevealEase }) => {
+      queryAll(scope).forEach((container) => {
+        const elements = collectScopedElements(container, selectors);
+
+        if (!elements.length) return;
+
+        gsap.set(elements, { opacity: 0, y, willChange: 'transform,opacity' });
+
+        const reveal = {
+          opacity: 1,
+          y: 0,
+          duration,
+          stagger,
+          ease,
+          overwrite: 'auto',
+
+          onComplete: () => {
+            gsap.set(elements, { clearProps: 'willChange' });
+          },
+        };
+
+        if (isInInitialViewport(container)) {
+          gsap.to(elements, reveal);
+          return;
+        }
+
+        gsap.to(elements, {
+          ...reveal,
+          scrollTrigger: {
+            trigger: container,
+            start,
+            toggleActions: 'play none none none',
+            once: true,
+          },
+        });
+      });
+    });
   }
 }
 
@@ -353,6 +734,21 @@ export class SubscribeForms {
     btn.disabled = true;
     input.value = '';
 
+    if (!prefersReducedMotion) {
+      gsap.fromTo(
+        btn,
+        { scale: 1 },
+        {
+          scale: 1.04,
+          duration: 0.18,
+          ease: buttonEase,
+          yoyo: true,
+          repeat: 1,
+          overwrite: 'auto',
+        }
+      );
+    }
+
     setTimeout(() => {
       btn.textContent = originalText;
       btn.disabled = false;
@@ -382,6 +778,106 @@ export function initAllAnimations() {
   const scrollReveal = new ScrollReveal(revealSelectors);
   scrollReveal.init();
 
+  const textReveal = new TextReveal([
+    {
+      scope: '.hero',
+      selectors: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'button', '.hero-content .subtext', '.hero-content .label'],
+      start: 'top 78%',
+      y: 60,
+      duration: 1.05,
+      stagger: 0.14,
+      ease: 'power3.out',
+    },
+    {
+      scope: '.hero, .categories, .products, .inspiration, .materials, .stories, .collection, .testimonials, .faq, .footer, .highlight, .features, .home-card, .story-card, .material-card, .design-item, .testimonial-card, .category-card, .product-card, .set-card',
+      selectors: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', '.product-badge', '.card-footer span', '.category-card__overlay h3', '.category-card__overlay p'],
+      start: 'top 86%',
+      y: 44,
+      duration: 0.95,
+      stagger: 0.1,
+      ease: textRevealEase,
+    },
+    {
+      scope: '.categories, .products, .inspiration, .materials, .stories, .collection, .testimonials, .faq, .footer, .highlight, .features, .home-card, .story-card, .material-card, .design-item, .testimonial-card, .category-card, .product-card, .set-card',
+      selectors: ['p', '.section-subtitle', '.materials-subtitle', '.tags', '.product-category', '.product-price', '.rating', '.faq-question span', '.faq-answer', '.footer-top .contact-item p', '.footer-left p', '.footer-links a', '.footer-bottom p', '.hover-actions button', '.product-info > *', '.set-info > *', '.category-card__overlay h3', '.category-card__overlay p', '.card-footer span'],
+      start: 'top 86%',
+      y: 28,
+      duration: 0.85,
+      stagger: 0.08,
+      ease: textRevealEase,
+    },
+    {
+      scope: '.collection-left',
+      selectors: ['p', '.nav-buttons button'],
+      start: 'top 82%',
+      y: 54,
+      duration: 0.95,
+      stagger: 0.14,
+      ease: 'power3.out',
+    },
+    {
+      scope: '.product-card, .set-card',
+      selectors: ['.product-info > *', '.set-info > *', '.hover-actions button'],
+      start: 'top 84%',
+      y: 32,
+      duration: 0.8,
+      stagger: 0.08,
+      ease: textRevealEase,
+    },
+    {
+      scope: '.category-card',
+      selectors: ['.category-card__overlay h3', '.category-card__overlay p'],
+      start: 'top 84%',
+      y: 32,
+      duration: 0.8,
+      stagger: 0.1,
+      ease: textRevealEase,
+    },
+    {
+      scope: '.testimonial-card',
+      selectors: ['.user span', '.stars', '.review', '.product span'],
+      start: 'top 84%',
+      y: 34,
+      duration: 0.85,
+      stagger: 0.1,
+      ease: textRevealEase,
+    },
+    {
+      scope: '.faq-left, .faq-item',
+      selectors: ['p', '.faq-question span', '.faq-answer'],
+      start: 'top 84%',
+      y: 38,
+      duration: 0.85,
+      stagger: 0.12,
+      ease: textRevealEase,
+    },
+    {
+      scope: '.footer',
+      selectors: [
+        '.footer-top .contact-item p',
+        '.footer-left p',
+        '.footer-left .subscribe-box',
+        '.footer-links a',
+        '.footer-links .socials img',
+        '.footer-bottom p',
+        '.footer-bottom .payments img',
+        '.footer-watermark',
+      ],
+      start: 'top 88%',
+      y: 30,
+      duration: 0.85,
+      stagger: 0.08,
+      ease: textRevealEase,
+    },
+  ]);
+  textReveal.init();
+
+  const premiumUI = new PremiumUIInteractions();
+  premiumUI.init();
+
+  // Shopping cart
+  const cart = new ShoppingCart();
+
   // Lazy loading
   const lazyLoad = new LazyLoadImages();
   lazyLoad.init();
@@ -391,7 +887,7 @@ export function initAllAnimations() {
   faq.init();
 
   // Product interactions
-  const products = new ProductCardInteractions();
+  const products = new ProductCardInteractions(cart);
   products.init();
 
   // Wishlist
@@ -406,7 +902,13 @@ export function initAllAnimations() {
   const inspirationPopups = new InspirationPopup();
   inspirationPopups.init();
 
-  return { scrollReveal, lazyLoad, faq, products, wishlist, subscribe, inspirationPopups };
+  if (!prefersReducedMotion) {
+    window.requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+    });
+  }
+
+  return { scrollReveal, textReveal, premiumUI, cart, lazyLoad, faq, products, wishlist, subscribe, inspirationPopups };
 }
 
 export default ScrollReveal;

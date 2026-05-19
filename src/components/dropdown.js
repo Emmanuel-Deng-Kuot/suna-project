@@ -89,20 +89,41 @@ class SearchBox {
 class TabList {
   constructor(containerSelector, itemSelector) {
     this.container = query(containerSelector);
+    this.list = this.container && query('ul', this.container);
     this.items = queryAll(itemSelector);
+    this.mobileQuery = window.matchMedia('(max-width: 767px)');
   }
 
   init() {
     if (!this.container || !this.items.length) return;
 
     this.items.forEach((item) => {
-      item.addEventListener('click', () => this._setActive(item));
+      item.addEventListener('click', () => {
+        if (this.mobileQuery.matches && item.classList.contains('active') && this.list && !this.list.classList.contains('open')) {
+          this.list.classList.add('open');
+          return;
+        }
+
+        this._setActive(item);
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!this.mobileQuery.matches) return;
+
+      if (!this.container.contains(event.target)) {
+        this.list && this.list.classList.remove('open');
+      }
     });
   }
 
   _setActive(target) {
     this.items.forEach((item) => removeClass(item, 'active'));
     addClass(target, 'active');
+
+    if (this.mobileQuery.matches && this.list) {
+      this.list.classList.remove('open');
+    }
   }
 }
 

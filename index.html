@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png+xml" href="/SUNA.png" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,7 +60,10 @@
           </select>
           <img src="src/assets/like.png" alt="Wishlist" loading="lazy">
           <img src="src/assets/contact.png" alt="Account" loading="lazy">
-          <img src="src/assets/chart.png" alt="Cart" loading="lazy">
+          <div class="cart-icon-wrapper">
+            <img src="src/assets/chart.png" alt="Cart" loading="lazy">
+            <span class="cart-count" id="cart-count">0</span>
+          </div>
         </div>
       </div>
     
@@ -68,10 +71,25 @@
     
       <ul class="navbar">
         <li><a class="active">Home</a></li>
-        <li><a>Shop By</a></li>
-        <li><a>Shop By Brand</a></li>
-        <li><a>Collections</a></li>
-        <li><a>Inspiration</a></li>
+        <li class="navbar-item-dropdown">
+          <button class="navbar-toggle" type="button" aria-haspopup="true" aria-expanded="false">Shop By</button>
+          <ul class="navbar-dropdown" aria-hidden="true">
+            <li><a href="#categories">Living Room</a></li>
+            <li><a href="#categories">Bedroom</a></li>
+            <li><a href="#categories">Dining Room</a></li>
+            <li><a href="#categories">Office</a></li>
+          </ul>
+        </li>
+        <li class="navbar-item-dropdown">
+          <button class="navbar-toggle" type="button" aria-haspopup="true" aria-expanded="false">Shop By Brand</button>
+          <ul class="navbar-dropdown" aria-hidden="true">
+            <li><a href="#brands">IKEA</a></li>
+            <li><a href="#brands">Informa</a></li>
+            <li><a href="#brands">Dekoruma</a></li>
+          </ul>
+        </li>
+        <li><a href="#collection">Collections</a></li>
+        <li><a href="#inspirations">Inspiration</a></li>
         <li><a>About</a></li>
       </ul>
     </header>
@@ -81,7 +99,7 @@
 <section class="hero swiper" id="hero">
   <div class="swiper-wrapper">
     <div class="hero-slide swiper-slide">
-      <div class="hero-slide-bg" style="background-image: url('src/assets/comfort.jpg')"></div>
+      <div class="hero-slide-bg hero-slide-bg--comfort"></div>
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <h1>
@@ -94,7 +112,7 @@
     </div>
 
     <div class="hero-slide swiper-slide">
-      <div class="hero-slide-bg" style="background-image: url('src/assets/image-2.png')"></div>
+      <div class="hero-slide-bg hero-slide-bg--image-2"></div>
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <h1>
@@ -137,9 +155,10 @@
     Explore our furniture by room, designed to bring balance, comfort, and timeless beauty
   </p>
 
-  <div class="cards">
+  <div class="cards swiper">
+    <div class="swiper-wrapper">
 
-    <div class="category-card">
+    <div class="category-card swiper-slide">
       <img src="src/assets/couch.jpg" alt="Living Room" loading="lazy">
       <div class="category-card__overlay">
         <h3>Living Room</h3>
@@ -147,7 +166,7 @@
       </div>
     </div>
 
-    <div class="category-card">
+    <div class="category-card swiper-slide">
       <img src="src/assets/kitchen.jpg" alt="Kitchen" loading="lazy">
       <div class="category-card__overlay">
         <h3>Kitchen</h3>
@@ -155,7 +174,7 @@
       </div>
     </div>
 
-    <div class="category-card">
+    <div class="category-card swiper-slide">
       <img src="src/assets/bedroom.jpg" alt="Bedroom" loading="lazy">
       <div class="category-card__overlay">
         <h3>Bedroom</h3>
@@ -163,7 +182,7 @@
       </div>
     </div>
 
-    <div class="category-card">
+    <div class="category-card swiper-slide">
       <img src="src/assets/outdoor.jpg" alt="Outdoor" loading="lazy">
       <div class="category-card__overlay">
         <h3>Outdoor</h3>
@@ -171,7 +190,7 @@
       </div>
     </div>
 
-    <div class="category-card">
+    <div class="category-card swiper-slide">
       <img src="src/assets/workoffice.png" alt="Work Office" loading="lazy">
       <div class="category-card__overlay">
         <h3>Work Office</h3>
@@ -179,6 +198,7 @@
       </div>
     </div>
 
+    </div>
   </div>
 </section>
 
@@ -284,6 +304,10 @@
       <div class="product-image">
         <span class="discount">-30%</span>
         <img src="src/assets/chaira.png" alt="Axis Leather Office Chair" loading="lazy">
+        <div class="hover-actions">
+          <button class="btn-quick-view">Quick View</button>
+          <button class="btn-add-to-cart">Add to Cart</button>
+        </div>
         <div class="product-countdown" data-deadline=""></div>
       </div>
       <div class="product-info">
@@ -303,6 +327,10 @@
       <div class="product-image">
         <span class="product-badge new">New</span>
         <img src="src/assets/bed1.png" alt="Serenity Cotton Bedding Set" loading="lazy">
+        <div class="hover-actions">
+          <button class="btn-quick-view">Quick View</button>
+          <button class="btn-add-to-cart">Add to Cart</button>
+        </div>
       </div>
       <div class="product-info">
         <p class="product-category">Bed</p>
@@ -319,6 +347,10 @@
     <div class="product-card">
       <div class="product-image">
         <img src="src/assets/chair3.png" alt="Haven Oak Chair" loading="lazy">
+        <div class="hover-actions">
+          <button class="btn-quick-view">Quick View</button>
+          <button class="btn-add-to-cart">Add to Cart</button>
+        </div>
       </div>
       <div class="product-info">
         <p class="product-category">Chair</p>
@@ -336,6 +368,10 @@
     <div class="product-card">
       <div class="product-image">
         <img src="src/assets/table1.png" alt="Mira Walnut Table" loading="lazy">
+        <div class="hover-actions">
+          <button class="btn-quick-view">Quick View</button>
+          <button class="btn-add-to-cart">Add to Cart</button>
+        </div>
       </div>
       <div class="product-info">
         <p class="product-category">Table</p>
@@ -353,6 +389,10 @@
       <div class="product-image">
         <span class="product-sold-out">Sold out</span>
         <img src="src/assets/vase1.png" alt="Nora Ceramic Vase" loading="lazy">
+        <div class="hover-actions">
+          <button class="btn-quick-view">Quick View</button>
+          <button class="btn-add-to-cart">Add to Cart</button>
+        </div>
       </div>
       <div class="product-info">
         <p class="product-category">Decor</p>
@@ -516,6 +556,10 @@
         <div class="set-image">
             <span class="product-badge">New</span>
           <img src="src/assets/sofa-set.png" alt="Noir Modular Sofa Set" loading="lazy">
+          <div class="hover-actions">
+            <button class="btn-quick-view">Quick View</button>
+            <button class="btn-add-to-cart">Add to Cart</button>
+          </div>
         </div>
         <div class="set-info">
           <p class="product-category">Set</p>
@@ -534,6 +578,10 @@
         <div class="set-image">
             <span class="product-badge">New</span>
           <img src="src/assets/dinning.png" alt="Aven Oak Dining Set" loading="lazy">
+          <div class="hover-actions">
+            <button class="btn-quick-view">Quick View</button>
+            <button class="btn-add-to-cart">Add to Cart</button>
+          </div>
         </div>
         <div class="set-info">
           <p class="product-category">Set</p>
@@ -551,6 +599,10 @@
       <div class="set-card">
         <div class="set-image">
           <img src="src/assets/lounge.png" alt="Luno Lounge Chair Set" loading="lazy">
+          <div class="hover-actions">
+            <button class="btn-quick-view">Quick View</button>
+            <button class="btn-add-to-cart">Add to Cart</button>
+          </div>
         </div>
         <div class="set-info">
           <p class="product-category">Set</p>
@@ -561,6 +613,47 @@
             <img src="src/assets/lounge2.png" alt="Lounge variant 2" loading="lazy">
           </div>
           <div class="rating">⭐ 5.0 <span>(140 Review)</span></div>
+        </div>
+      </div>
+      <div class="set-card">
+        <div class="set-image">
+            <span class="product-badge">New</span>
+          <img src="src/assets/sofa-set.png" alt="Noir Modular Sofa Set" loading="lazy">
+          <div class="hover-actions">
+            <button class="btn-quick-view">Quick View</button>
+            <button class="btn-add-to-cart">Add to Cart</button>
+          </div>
+        </div>
+        <div class="set-info">
+          <p class="product-category">Set</p>
+          <h3>Luno Lounge Chair Set</h3>
+          <span class="product-price">$175</span>
+          <div class="variants">
+            <img src="src/assets/lounge.png" alt="Lounge variant 1" loading="lazy">
+            <img src="src/assets/lounge2.png" alt="Lounge variant 2" loading="lazy">
+          </div>
+          <div class="rating">⭐ 5.0 <span>(140 Review)</span></div>
+        </div>
+      </div>
+      <div class="set-card">
+        <div class="set-image">
+            <span class="product-badge">New</span>
+          <img src="src/assets/dinning.png" alt="Aven Oak Dining Set" loading="lazy">
+          <div class="hover-actions">
+            <button class="btn-quick-view">Quick View</button>
+            <button class="btn-add-to-cart">Add to Cart</button>
+          </div>
+        </div>
+        <div class="set-info">
+          <p class="product-category">Set</p>
+          <h3>Aven Oak Dining Set</h3>
+            <span class="product-price">$210</span>
+          <div class="variants">
+            <img src="src/assets/dinning.png" alt="Dining set variant 1" loading="lazy">
+            <img src="src/assets/dinning2.png" alt="Dining set variant 2" loading="lazy">
+            <img src="src/assets/dinning3.png" alt="Dining set variant 3" loading="lazy">
+          </div>
+          <div class="rating">⭐ 5.0 <span>(470 Review)</span></div>
         </div>
       </div>
     </div>
@@ -584,10 +677,12 @@
 
   <div class="inspiration-wrapper">
     <img src="src/assets/living-room.jpg" alt="Living Room Inspiration" loading="lazy">
-    <span class="product-hotspot" data-img="src/assets/product-popup.jpg" data-title="Living Room" data-desc="Bring warmth and comfort to your living space" style="top:30%; left:25%;"></span>
-    <span class="product-hotspot" data-img="src/assets/product-popup.jpg" data-title="Cozy Corner" data-desc="A small nook for reading and relaxing" style="top:75%; left:18%;"></span>
-    <span class="product-hotspot" data-img="src/assets/product-popup.jpg" data-title="Accent Shelf" data-desc="Curated decor to elevate your room" style="top:89%; left:48%;"></span>
-    <span class="product-hotspot" data-img="src/assets/product-popup.jpg" data-title="Feature" data-desc="Statement piece that anchors the space" style="top:60%; left:55%;"></span>
+    <span class="product-hotspot product-hotspot--living" data-img="src/assets/product-popup.jpg" data-title="Living Room" data-desc="Bring warmth and comfort to your living space"></span>
+    <span class="product-hotspot product-hotspot--cozy" data-img="src/assets/product-popup.jpg" data-title="Cozy Corner" data-desc="A small nook for reading and relaxing"></span>
+    <span class="product-hotspot product-hotspot--shelf" data-img="src/assets/product-popup.jpg" data-title="Accent Shelf" data-desc="Curated decor to elevate your room"></span>
+    <span class="product-hotspot product-hotspot--feature" data-img="src/assets/product-popup.jpg" data-title="Feature" data-desc="Statement piece that anchors the space"></span>
+    <span class="product-hotspot product-hotspot--set" data-img="src/assets/product-popup.jpg" data-title="Furniture Set" data-desc="Statement piece that anchors the space"></span>
+
 
     <div class="product-popup">
       <img src="src/assets/product-popup.jpg" alt="Featured product" loading="lazy">
@@ -624,6 +719,10 @@
       <div class="image-box">
         <span class="product-badge">Best seller</span>
         <img src="src/assets/lamp1.png" alt="Aurea Ceramic Lamp" loading="lazy">
+        <div class="hover-actions">
+          <button class="btn-quick-view">Quick View</button>
+          <button class="btn-add-to-cart">Add to Cart</button>
+        </div>
       </div>
       <p class="category">Lamp</p>
       <h4>Aurea Ceramic Lamp</h4>
@@ -640,6 +739,10 @@
       <div class="image-box">
         <span class="product-badge">Best seller</span>
         <img src="src/assets/sofas.png" alt="Lazura Soft Sofa" loading="lazy">
+        <div class="hover-actions">
+          <button class="btn-quick-view">Quick View</button>
+          <button class="btn-add-to-cart">Add to Cart</button>
+        </div>
       </div>
       <p class="category">Sofa</p>
       <h4>Lazura Soft Sofa</h4>
@@ -656,6 +759,10 @@
       <div class="image-box">
         <span class="product-badge">Best seller</span>
         <img src="src/assets/table.png" alt="Velina Vanity Table" loading="lazy">
+        <div class="hover-actions">
+          <button class="btn-quick-view">Quick View</button>
+          <button class="btn-add-to-cart">Add to Cart</button>
+        </div>
       </div>
       <p class="category">Table</p>
       <h4>Velina Vanity Table</h4>
@@ -671,6 +778,10 @@
       <div class="image-box">
         <span class="product-badge">Best seller</span>
         <img src="src/assets/vase.png" alt="Sereno Ceramic Vase" loading="lazy">
+        <div class="hover-actions">
+          <button class="btn-quick-view">Quick View</button>
+          <button class="btn-add-to-cart">Add to Cart</button>
+        </div>
       </div>
       <p class="category">Decor</p>
       <h4>Sereno Ceramic Vase</h4>
@@ -816,71 +927,73 @@
       <h2>What they say<br>about us</h2>
     </div>
 
-    <div class="testimonials-slider">
+    <div class="testimonials-slider swiper">
+      <div class="swiper-wrapper">
 
-      <div class="testimonial-card">
-        <div class="user">
-          <img src="src/assets/user1.jpg" alt="Olivia Johnson" loading="lazy">
-          <div>
-            <h4>Olivia Johnson</h4>
-            <span>Toronto, Canada</span>
+        <div class="testimonial-card swiper-slide">
+          <div class="user">
+            <img src="src/assets/user1.jpg" alt="Olivia Johnson" loading="lazy">
+            <div>
+              <h4>Olivia Johnson</h4>
+              <span>Toronto, Canada</span>
+            </div>
+          </div>
+          <div class="stars">★★★★★</div>
+          <p class="review">
+            "I'm truly impressed! The furniture quality is beyond my expectations.
+            The material is strong, the finish is smooth, and it looks very premium.
+            My home looks so much more aesthetic now."
+          </p>
+          <hr>
+          <div class="product">
+            <img src="src/assets/product1.jpg" alt="Press Table" loading="lazy">
+            <span>Press Table</span>
           </div>
         </div>
-        <div class="stars">★★★★★</div>
-        <p class="review">
-          "I'm truly impressed! The furniture quality is beyond my expectations.
-          The material is strong, the finish is smooth, and it looks very premium.
-          My home looks so much more aesthetic now."
-        </p>
-        <hr>
-        <div class="product">
-          <img src="src/assets/product1.jpg" alt="Press Table" loading="lazy">
-          <span>Press Table</span>
-        </div>
-      </div>
 
-      <div class="testimonial-card">
-        <div class="user">
-          <img src="src/assets/user2a.jpg" alt="Lucas Foster" loading="lazy">
-          <div>
-            <h4>Lucas Foster</h4>
-            <span>Melbourne, Australia</span>
+        <div class="testimonial-card swiper-slide">
+          <div class="user">
+            <img src="src/assets/user2a.jpg" alt="Lucas Foster" loading="lazy">
+            <div>
+              <h4>Lucas Foster</h4>
+              <span>Melbourne, Australia</span>
+            </div>
+          </div>
+          <div class="stars">★★★★★</div>
+          <p class="review">
+            "The delivery was fast and everything arrived perfectly packaged.
+            The sofa set fits our living room beautifully — the colour is exactly
+            as shown and the cushions are incredibly comfortable."
+          </p>
+          <hr>
+          <div class="product">
+            <img src="src/assets/sofa-set.png" alt="Noir Modular Sofa Set" loading="lazy">
+            <span>Noir Modular Sofa Set</span>
           </div>
         </div>
-        <div class="stars">★★★★★</div>
-        <p class="review">
-          "The delivery was fast and everything arrived perfectly packaged.
-          The sofa set fits our living room beautifully — the colour is exactly
-          as shown and the cushions are incredibly comfortable."
-        </p>
-        <hr>
-        <div class="product">
-          <img src="src/assets/sofa-set.png" alt="Noir Modular Sofa Set" loading="lazy">
-          <span>Noir Modular Sofa Set</span>
-        </div>
-      </div>
 
-      <div class="testimonial-card">
-        <div class="user">
-          <img src="src/assets/user3a.jpg" alt="Isabella Reed" loading="lazy">
-          <div>
-            <h4>Isabella Reed</h4>
-            <span>London, United Kingdom</span>
+        <div class="testimonial-card swiper-slide">
+          <div class="user">
+            <img src="src/assets/user3a.jpg" alt="Isabella Reed" loading="lazy">
+            <div>
+              <h4>Isabella Reed</h4>
+              <span>London, United Kingdom</span>
+            </div>
+          </div>
+          <div class="stars">★★★★★</div>
+          <p class="review">
+            "Suna completely transformed our bedroom. The bedding set is
+            luxuriously soft and the wooden bed frame has such an elegant finish.
+            Incredible value for the quality you receive."
+          </p>
+          <hr>
+          <div class="product">
+            <img src="src/assets/bed1.png" alt="Serenity Cotton Bedding Set" loading="lazy">
+            <span>Serenity Cotton Bedding Set</span>
           </div>
         </div>
-        <div class="stars">★★★★★</div>
-        <p class="review">
-          "Suna completely transformed our bedroom. The bedding set is
-          luxuriously soft and the wooden bed frame has such an elegant finish.
-          Incredible value for the quality you receive."
-        </p>
-        <hr>
-        <div class="product">
-          <img src="src/assets/bed1.png" alt="Serenity Cotton Bedding Set" loading="lazy">
-          <span>Serenity Cotton Bedding Set</span>
-        </div>
-      </div>
 
+      </div>
     </div>
   </div>
 </section>
@@ -1031,41 +1144,43 @@
   <span class="tags">Ceramic Table Lamp</span>
   <h2>Find Your Home Inspiration</h2>
 
-  <div class="inspiration-row">
-    <div class="inspiration-card">
+  <div class="inspiration-row swiper">
+    <div class="swiper-wrapper">
+    <div class="inspiration-card swiper-slide">
       <img src="src/assets/inspire1.jpg" alt="Home inspiration 1" loading="lazy">
       <div class="card-footer">
         <span>home_vision</span>
         <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
       </div>
     </div>
-    <div class="inspiration-card">
+    <div class="inspiration-card swiper-slide">
       <img src="src/assets/inspire2.jpg" alt="Home inspiration 2" loading="lazy">
       <div class="card-footer">
         <span>Furniture_lovers</span>
         <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
       </div>
     </div>
-    <div class="inspiration-card">
+    <div class="inspiration-card swiper-slide">
       <img src="src/assets/inspire3.jpg" alt="Home inspiration 3" loading="lazy">
       <div class="card-footer">
         <span>alexanoel</span>
         <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
       </div>
     </div>
-    <div class="inspiration-card">
+    <div class="inspiration-card swiper-slide">
       <img src="src/assets/inspire4.jpg" alt="Home inspiration 4" loading="lazy">
       <div class="card-footer">
         <span>sunafurniture</span>
         <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
       </div>
     </div>
-    <div class="inspiration-card">
+    <div class="inspiration-card swiper-slide">
       <img src="src/assets/inspire5.jpg" alt="Home inspiration 5" loading="lazy">
       <div class="card-footer">
         <span>nitaananta</span>
         <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
       </div>
+    </div>
     </div>
   </div>
 </section>

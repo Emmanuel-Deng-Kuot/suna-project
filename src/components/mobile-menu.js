@@ -80,6 +80,26 @@ class MobileMenu {
     }
   }
 
+  _moveHamburgerIntoMenu() {
+    if (!this.hamburger || !this.navbar) return;
+
+    if (this.hamburger.parentElement !== this.navbar) {
+      this.navbar.insertBefore(this.hamburger, this.navbar.firstChild);
+    }
+  }
+
+  _restoreHamburgerToHeader() {
+    if (!this.hamburger || !this.topHeader) return;
+
+    if (this.hamburger.parentElement !== this.topHeader) {
+      if (this.headerIcons && this.headerIcons.parentElement === this.topHeader) {
+        this.topHeader.insertBefore(this.hamburger, this.headerIcons);
+      } else {
+        this.topHeader.appendChild(this.hamburger);
+      }
+    }
+  }
+
   /**
    * Attach event listeners
    */
@@ -90,10 +110,10 @@ class MobileMenu {
     // Overlay click to close
     this.overlay.addEventListener('click', () => this._closeMenu());
 
-    // Close menu when nav link is clicked (mobile only)
-    queryAll('a, li', this.navbar).forEach((element) => {
+    // Close menu when nav link is clicked (mobile only), but keep dropdown toggles open
+    queryAll('a, button', this.navbar).forEach((element) => {
       element.addEventListener('click', () => {
-        if (window.innerWidth <= this.mobileBreakpoint) {
+        if (window.innerWidth <= this.mobileBreakpoint && !element.classList.contains('navbar-toggle')) {
           this._closeMenu();
         }
       });
@@ -120,6 +140,7 @@ class MobileMenu {
   _openMenu() {
     if (this.isMenuOpen) return;
 
+    this._moveHamburgerIntoMenu();
     addClass(this.navbar, 'open');
     addClass(this.overlay, 'visible');
     addClass(this.hamburger, 'active');
@@ -140,6 +161,7 @@ class MobileMenu {
     removeClass(this.hamburger, 'active');
     this.hamburger.setAttribute('aria-expanded', 'false');
     document.body.style.overflow = '';
+    this._restoreHamburgerToHeader();
 
     this.isMenuOpen = false;
   }
