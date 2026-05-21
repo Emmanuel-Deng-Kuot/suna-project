@@ -129,7 +129,8 @@
 </section>
 
 <section class="features-scroll" id="features">
-  <div class="features-carousel">
+  <div class="container">
+    <div class="features-carousel">
     <div class="feature">
       <span>Crafted for Every Home</span>
       <img src="src/assets/stool.png" alt="Stool" loading="lazy" decoding="async">
@@ -146,16 +147,18 @@
       <span>Crafted for Every Home</span>
       <img src="src/assets/stool.png" alt="Stool" loading="lazy" decoding="async">
     </div>
+    </div>
   </div>
 </section>
 
 <section class="categories" id="categories">
-  <h2>Shop by categories</h2>
-  <p class="section-subtitle">
-    Explore our furniture by room, designed to bring balance, comfort, and timeless beauty
-  </p>
+  <div class="container">
+    <h2>Shop by categories</h2>
+    <p class="section-subtitle">
+      Explore our furniture by room, designed to bring balance, comfort, and timeless beauty
+    </p>
 
-  <div class="cards swiper">
+    <div class="cards swiper">
     <div class="swiper-wrapper">
 
     <div class="category-card swiper-slide">
@@ -203,13 +206,14 @@
 </section>
 
 <section class="highlight" id="highlight">
-  <p>
-    Bring more
-    <span class="highlight-image-badge">
-      <img src="src/assets/light.jpg" alt="Warm lighting" loading="lazy">
-    </span>
-    warmth
-  </p>
+  <div class="container">
+    <p>
+      Bring more
+      <span class="highlight-image-badge">
+        <img src="src/assets/light.jpg" alt="Warm lighting" loading="lazy">
+      </span>
+      warmth
+    </p>
   <p>
     And
     <span class="highlight-image-badge">
@@ -222,18 +226,18 @@
     <span class="highlight-image-badge">
       <img src="src/assets/sitting room.png" alt="Sitting room" loading="lazy">
     </span>
-  </p>
+    </div>
 </section>
 
 <section class="products" id="products">
+  <div class="container">
+    <h2>Elevate Your Everyday Living</h2>
+    <p class="section-subtitle">
+      Explore our curated collection of refined furniture designed for lasting comfort and quiet sophistication.
+    </p>
 
-  <h2>Elevate Your Everyday Living</h2>
-  <p class="section-subtitle">
-    Explore our curated collection of refined furniture designed for lasting comfort and quiet sophistication.
-  </p>
 
-
-  <div class="product-grid">
+    <div class="product-grid">
 
     <div class="product-card">
       <div class="product-image">
@@ -409,13 +413,15 @@
     </div>
    
 
-  </div>
+    </div>
     <a href="#" class="view-all">View All</a>
+  </div>
 
 </section>
 
 <section class="offer-section" id="offer">
-  <div class="offer-container">
+  <div class="container">
+    <div class="offer-container">
     <div class="offer-content">
       <h2>
         Exclusive Offer, Up to <br>
@@ -451,11 +457,13 @@
 
       <button class="buy-btn">Buy Now</button>
     </div>
+    </div>
   </div>
 </section>
 
 <section class="features-section" id="features-benefits">
-  <div class="feature-items">
+ 
+    <div class="feature-items">
     <img src="src/assets/home-icon.png" alt="" loading="lazy">
     <h3>Free Design Consultation</h3>
     <p>Get personalized interior design advice free with every purchase.</p>
@@ -474,18 +482,20 @@
     <img src="src/assets/icon-return.png" alt="" loading="lazy">
     <h3>Easy Returns</h3>
     <p>Shop confidently with our 7 day return policy.</p>
+    </div>
   </div>
 </section>
 
 <section class="home-section" id="home">
-  <div class="home-layout">
+  <div class="container">
+    <div class="home-layout">
     <div class="left-content">
       <h2>Handpicked Elegance<br>for Your Home</h2>
       <ul>
-        <li>Tailored for Tranquility</li>
-        <li>Refined Woodcrafts</li>
-        <li>Sculptural Centerpieces</li>
-        <li class="active">Earth-Toned Serenity</li>
+        <li><a href="#home-card-0">Tailored for Tranquility</a></li>
+        <li><a href="#home-card-1">Refined Woodcrafts</a></li>
+        <li><a href="#home-card-2">Sculptural Centerpieces</a></li>
+        <li class="active"><a href="#home-card-3">Earth-Toned Serenity</a></li>
       </ul>
       <p>
         Soothing textures and muted hues designed to bring quiet luxury into your space.
@@ -493,28 +503,31 @@
     </div>
 
     <div class="grid">
-      <div class="home-card living large">
+      <div class="home-pair-a">
+      <div id="home-card-0" class="home-card living large">
         <img src="src/assets/living-room.png" alt="Living Room" loading="lazy">
         <div class="home-card__overlay">
           <h4>Living Room</h4>
           <p>Bring warmth and comfort to your living space</p>
         </div>
       </div>
-      <div class="home-card kitchen">
-        <img src="src/assets/kitchen.png" alt="Kitchen" loading="lazy">
-        <div class="home-card__overlay">
-          <h4>Kitchen</h4>
-          <p>Cook and create in a modern, functional space</p>
-        </div>
-      </div>
-      <div class="home-card office">
+      <div id="home-card-1" class="home-card office">
         <img src="src/assets/office.png" alt="Work Office" loading="lazy">
         <div class="home-card__overlay">
           <h4>Work Office</h4>
           <p>Where comfort inspires focus</p>
         </div>
       </div>
-      <div class="home-card bedroom">
+      </div>
+      <div class="home-pair-b">
+      <div id="home-card-2" class="home-card kitchen">
+        <img src="src/assets/kitchen.png" alt="Kitchen" loading="lazy">
+        <div class="home-card__overlay">
+          <h4>Kitchen</h4>
+          <p>Cook and create in a modern, functional space</p>
+        </div>
+      </div>
+      <div id="home-card-3" class="home-card bedroom">
         <img src="src/assets/bedroom.png" alt="Bedroom" loading="lazy">
         <div class="home-card__overlay">
           <h4>Bedroom</h4>
@@ -522,22 +535,26 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
 </section>
 
 <section class="brand-section" id="brands">
-  <div class="brand-wrapper">
+  <div class="container">
+    <div class="brand-wrapper">
     <img src="src/assets/ikea.png" alt="IKEA" loading="lazy">
     <img src="src/assets/informa.png" alt="Informa" loading="lazy">
     <img src="src/assets/dekoruma.png" alt="Dekoruma" loading="lazy">
     <img src="src/assets/ikea.png" alt="IKEA" loading="lazy">
     <img src="src/assets/informa.png" alt="Informa" loading="lazy">
     <img src="src/assets/dekoruma.png" alt="Dekoruma" loading="lazy">
+    </div>
   </div>
 </section>
 
 <section class="collection" id="collection">
-  <div class="collection-container">
+  <div class="container">
+    <div class="collection-container">
     <div class="collection-left">
       <h2>
         Exclusive <br>
@@ -657,25 +674,27 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <a href="#" class="view-all">View All</a>
+    </div>
+
+    <a href="#" class="view-all">View All</a>
 </section>
 
 <section class="inspiration" id="inspiration">
-  <h2>
-    Inspiration for the
-    <span class="underline-img">
-      Refined Home
-      <img src="src/assets/underline.png" alt="" loading="lazy">
-    </span>
-  </h2>
-  <p class="section-subtitle">
-    Let your space breathe with elegance — discover timeless compositions, muted palettes,
-    and textures that speak without saying a word.
-  </p>
+  <div class="container">
+    <h2>
+      Inspiration for the
+      <span class="underline-img">
+        Refined Home
+        <img src="src/assets/underline.png" alt="" loading="lazy">
+      </span>
+    </h2>
+    <p class="section-subtitle">
+      Let your space breathe with elegance — discover timeless compositions, muted palettes,
+      and textures that speak without saying a word.
+    </p>
 
-  <div class="inspiration-wrapper">
+    <div class="inspiration-wrapper">
     <img src="src/assets/living-room.jpg" alt="Living Room Inspiration" loading="lazy">
     <span class="product-hotspot product-hotspot--living" data-img="src/assets/product-popup.jpg" data-title="Living Room" data-desc="Bring warmth and comfort to your living space"></span>
     <span class="product-hotspot product-hotspot--cozy" data-img="src/assets/product-popup.jpg" data-title="Cozy Corner" data-desc="A small nook for reading and relaxing"></span>
@@ -703,11 +722,13 @@
     </div>
 
     <div class="like-counter">♡ 5</div>
+    </div>
   </div>
 </section>
 
 <section class="best-seller" id="best-seller">
-  <div class="tabs">
+  <div class="container">
+    <div class="tabs">
     <span>Best Seller</span>
     <span>New Arrivals</span>
     <span>Hot Items</span>
@@ -793,9 +814,10 @@
       <div class="rating">⭐ 5.0 <span>(1,000+ Review)</span></div>
     </div>
 
-  </div>
 
-  <a href="#" class="view-all">View All</a>
+    </div>
+
+    <a href="#" class="view-all">View All</a>
 </section>
 
 <section class="subscribe" id="subscribe">
@@ -803,7 +825,8 @@
     <source src="src/assets/subscribe.mp4" type="video/mp4">
   </video>
 
-  <div class="subscribe-content">
+  <div class="container">
+    <div class="subscribe-content">
     <h2>
       SUBSCRIBE TO GET 10% OFF<br> GET FOR NEW ARRIVALS AND DISCOUNTS
     </h2>
@@ -811,9 +834,9 @@
       <input type="email" placeholder="Enter Your Email">
       <button>Subscribe</button>
     </div>
-  </div>
+    </div>
 
-  <div class="features">
+    <div class="features">
     <div class="feature-item">
       <img src="src/assets/lock.png" alt="" loading="lazy">
       <span>Exclusive Deals</span>
@@ -830,16 +853,17 @@
       <img src="src/assets/reward.png" alt="" loading="lazy">
       <span>Reward benefit</span>
     </div>
-  </div>
+</div>
 </section>
 
 <section class="materials" id="materials">
-  <h2>Explore by Material</h2>
-  <p class="materials-subtitle">
-    Discover timeless pieces crafted from the finest wood, glass, fabric, and rattan
-  </p>
+  <div class="container">
+    <h2>Explore by Material</h2>
+    <p class="materials-subtitle">
+      Discover timeless pieces crafted from the finest wood, glass, fabric, and rattan
+    </p>
 
-  <div class="materials-grid">
+    <div class="materials-grid">
     <div class="material-card red">
       <div class="card-content">
         <h3>Soft Comfort</h3>
@@ -868,16 +892,17 @@
       </div>
       <img src="src/assets/rattan-table.png" alt="Rattan table" loading="lazy">
     </div>
-  </div>
+</div>
 </section>
 
 <section class="inside-design" id="inside-design">
-  <div class="design-header">
+  <div class="container">
+    <div class="design-header">
     <h2>Inside the Design</h2>
     <p>Discover the craftsmanship, proportions, and essence behind every piece</p>
-  </div>
+    </div>
 
-  <div class="design-wrapper">
+    <div class="design-wrapper">
     <div class="design-image">
       <img src="src/assets/living-room1.jpg" alt="Living room design detail" loading="lazy">
     </div>
@@ -916,18 +941,24 @@
         <img src="src/assets/light.jpg" alt="Product in use" loading="lazy">
       </div>
     </div>
-  </div>
+</div>
 </section>
 
 <section class="testimonials" id="testimonials">
-  <div class="testimonials-container">
+  <div class="container">
+    <div class="testimonials-container">
 
     <div class="testimonials-left">
       <p class="section-label">Testimonials</p>
       <h2>What they say<br>about us</h2>
     </div>
 
-    <div class="testimonials-slider swiper">
+      <div class="nav-buttons">
+        <button class="btn-prev">‹</button>
+        <button class="btn-next">›</button>
+      </div>
+
+      <div class="testimonials-slider swiper">
       <div class="swiper-wrapper">
 
         <div class="testimonial-card swiper-slide">
@@ -995,11 +1026,12 @@
 
       </div>
     </div>
-  </div>
+</div>
 </section>
 
 <section class="faq" id="faq">
-  <div class="faq-container">
+  <div class="container">
+    <div class="faq-container">
 
     <div class="faq-left">
       <h2>
@@ -1060,16 +1092,17 @@
       </div>
     </div>
 
-  </div>
+</div>
 </section>
 
 <section class="stories" id="stories">
-  <h2>Home Stories &amp; Inspirations</h2>
-  <p class="section-subtitle">
-    Explore inspiring designs and exclusive offers to transform your home
-  </p>
+  <div class="container">
+    <h2>Home Stories &amp; Inspirations</h2>
+    <p class="section-subtitle">
+      Explore inspiring designs and exclusive offers to transform your home
+    </p>
 
-  <div class="stories-grid">
+    <div class="stories-grid">
 
     <div class="story-card">
       <div class="image-box">
@@ -1135,16 +1168,18 @@
       </div>
     </div>
 
-  </div>
+    </div>
 
-  <a href="#" class="view-alls">View All</a>
+    <a href="#" class="view-alls">View All</a>
+  </div>
 </section>
 
 <section class="inspirations" id="inspirations">
-  <span class="tags">Ceramic Table Lamp</span>
-  <h2>Find Your Home Inspiration</h2>
+  <div class="container">
+    <span class="tags">Ceramic Table Lamp</span>
+    <h2>Find Your Home Inspiration</h2>
 
-  <div class="inspiration-row swiper">
+    <div class="inspiration-row swiper">
     <div class="swiper-wrapper">
     <div class="inspiration-card swiper-slide">
       <img src="src/assets/inspire1.jpg" alt="Home inspiration 1" loading="lazy">
@@ -1180,6 +1215,7 @@
         <span>nitaananta</span>
         <img src="src/assets/instagram.png" alt="Instagram" loading="lazy">
       </div>
+    </div>
     </div>
     </div>
   </div>

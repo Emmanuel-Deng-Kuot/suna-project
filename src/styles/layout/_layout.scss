@@ -144,6 +144,7 @@ header {
 @include respond-up($bp-lg) {
   .top-header {
     padding: 18px 40px;
+  }
 
   .header-icons .custom-select-toggle {
     color: $color-text;
@@ -152,6 +153,16 @@ header {
   .announcement-right .custom-select-toggle {
     color: $color-white;
   }
+
+  /* Keep the announcement-bar dropdown text explicitly dark while
+     the toggle in the announcement bar stays white */
+  .announcement-right .custom-select {
+    .custom-select-menu {
+      color: $color-text;
+    }
+    .custom-select-option {
+      color: $color-text;
+    }
   }
 
   .search-wrapper {
@@ -502,6 +513,14 @@ header {
     pointer-events: auto;
   }
 
+  /* when JS temporarily suppresses hover, don't show dropdown on hover */
+  .navbar-item-dropdown[data-suppress-hover]:hover > .navbar-dropdown {
+    transform: translateY(-8px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   .navbar-dropdown a {
     font-size: 14px;
     padding: 8px 16px;
@@ -551,7 +570,7 @@ header {
   padding: 6px 8px;
   cursor: pointer;
   font-size: 14px;
-  color: #fff;
+  color: $color-text;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
@@ -562,6 +581,7 @@ header {
   left: 0;
   min-width: 140px;
   background: $color-white;
+  color: $color-text;
   border-radius: 8px;
   box-shadow: 0 12px 30px rgba(0,0,0,0.12);
   padding: 6px 0;
@@ -573,11 +593,29 @@ header {
   pointer-events: none;
 }
 
-.custom-select .custom-select-search { width: 100%; padding: 8px 10px; box-sizing: border-box; border-radius: 6px; border: 1px solid #eee; margin-bottom: 6px; }
+.custom-select .custom-select-search {
+  width: 100%;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  margin-bottom: 6px;
+  color: $color-text;
+  background: $color-white;
+}
 
 .custom-select-list { list-style: none; margin: 0; padding: 0; max-height: 240px; overflow: auto; }
-.custom-select-option { padding: 8px 12px; cursor: pointer; font-size: 14px; }
-.custom-select-option:hover, .custom-select-option:focus { background: $color-brand-soft; color: $color-accent; }
+.custom-select-option {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: $color-text;
+  line-height: 1.3;
+}
+.custom-select-option:hover, .custom-select-option:focus {
+  background: $color-brand-soft;
+  color: $color-accent;
+}
 
 /* hidden by default; JS toggles .open on wrapper */
 .custom-select .custom-select-menu[aria-hidden="true"] {

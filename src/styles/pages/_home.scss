@@ -1377,6 +1377,22 @@
   transition: color 0.25s ease;
 }
 
+  /* keep anchors in the left list matching the previous list text color */
+  .left-content ul a {
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .left-content ul a:hover {
+    color: $color-black;
+  }
+
+  .left-content ul li.active a {
+    color: $color-black;
+    font-weight: 600;
+  }
+
 .left-content ul li:hover {
   color: $color-black;
   animation: homeTabLift 0.28s ease both;
@@ -1405,16 +1421,14 @@
   gap: 15px;
 }
 
-.home-card {
-  position: relative;
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-  aspect-ratio: 1 / 1;
-  height: 500px;
-  width:393px;
-  width: 100%;
-}
+  .home-card {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    width: 100%;
+    min-height: 500px;
+  }
 
 .home-card img {
   width: 100%;
@@ -1471,6 +1485,11 @@
 
 .home-card:active::after {
   transform: scale(1.1);
+}
+
+.home-card.is-selected {
+  outline: 2px solid rgba(17, 17, 17, 0.14);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.12);
 }
 
 @media (max-width: 767px) {
@@ -1633,19 +1652,40 @@
     grid-row: 1 / 3;
   }
 
-  .home-section .grid .home-card:nth-child(2) {
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
+  /* New layout for paired home cards (we nest two cards per column)
+     Keep mobile behavior; on desktop use two vertical columns where
+     the right column is offset visually to sit centered beside the
+     large left card. */
+  .home-section .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+     /* make the grid row a fixed visual height so the section's
+       height matches the cards and following sections cannot overlap */
+      grid-auto-rows: 1200px;
   }
 
-  .home-section .grid .home-card:nth-child(3) {
-    grid-column: 1 / 2;
-    grid-row: 2 / 3;
+  .home-pair-a,
+  .home-pair-b {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    width: 100%;
+    height: 100%; /* pairs fill the grid row height */
   }
 
-  .home-section .grid .home-card:nth-child(4) {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
+  /* Make the first (large) card visually dominant */
+  /* Make both cards in a column equally share the available space */
+  .home-pair-a .home-card,
+  .home-pair-b .home-card {
+    flex: 1 1 0;
+    min-height: 0; /* allow flexing to match column height */
+  }
+
+  /* Remove offset so both columns align to equal height */
+  .home-pair-b {
+    margin-top: 45px;
   }
 
   .home-card:hover::after {
@@ -1654,6 +1694,29 @@
 
   .home-card:hover img {
     transform: scale(1.05);
+  }
+
+  /* Force equal 500px height for home cards on desktop */
+  /* Cards take full height of the grid row to ensure no overflow */
+  .home-pair-a .home-card,
+  .home-pair-b .home-card {
+    height: 100%;
+    min-height: 0;
+    flex: 1 1 0;
+  }
+
+  /* Ensure the section contains positioned children so it doesn't
+     overlap the next section. This preserves card heights. */
+  .home-section {
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 130px;
+  }
+
+  .home-section::after {
+    content: "";
+    display: table;
+    clear: both;
   }
 }
 
@@ -1800,6 +1863,10 @@
   scroll-snap-align: start;
 }
 
+.home-card[aria-hidden="true"] {
+  display: none !important;
+}
+
 .set-image {
   position: relative;
   background: $color-brand-soft;
@@ -1875,6 +1942,49 @@
   width: fit-content;
   margin-left: auto;
   margin-right: auto;
+}
+
+/* Testimonials: reuse collection nav button styles and add hover lift */
+.testimonials .nav-buttons {
+  display: none;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 40px; /* move buttons down */
+  position: relative;
+}
+
+.testimonials .nav-buttons button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #e5e5e5;
+  color: $color-black;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+
+.testimonials .nav-buttons button:hover {
+  background: $color-white; /* white on hover */
+  color: $color-black;
+}
+
+.testimonial-card {
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+  will-change: transform;
+}
+
+@media (min-width: 768px) {
+  .testimonials .nav-buttons {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 248px;
+  }
+
+  .testimonial-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
 }
 
 @media (min-width: 768px) {
@@ -2394,6 +2504,7 @@
   gap: 10px;
   padding: 12px 20px;
   border-radius: 127px;
+    margin-left: -40px;
 }
 
 .subscribe .subscribe-box button:active {
@@ -3083,6 +3194,12 @@
     width: 427px;
     min-width: 427px;
     height: 330px;
+  }
+}
+
+@media (max-width: 767px) {
+  .testimonials .nav-buttons {
+    display: none !important;
   }
 }
 

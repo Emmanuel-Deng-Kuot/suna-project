@@ -581,10 +581,9 @@ export function initTestimonialsSwiper() {
   }
 
   const testimonialsSwiper = new Swiper(testimonialsElement, {
-    modules: [FreeMode],
     slidesPerView: 1,
     spaceBetween: 16,
-    freeMode: true,
+    loop: true,
     watchSlidesProgress: true,
     grabCursor: true,
     speed: 600,
@@ -625,6 +624,14 @@ export function initAllSliders() {
   // Testimonials Swiper
   const testimonialsSwiper = initTestimonialsSwiper();
 
+  // Wire prev/next buttons for testimonials (if present)
+  const testimonialsPrev = query('.testimonials .btn-prev');
+  const testimonialsNext = query('.testimonials .btn-next');
+  if (testimonialsSwiper) {
+    if (testimonialsPrev) testimonialsPrev.addEventListener('click', () => testimonialsSwiper.slidePrev());
+    if (testimonialsNext) testimonialsNext.addEventListener('click', () => testimonialsSwiper.slideNext());
+  }
+
   // Inspiration dots
   const inspirationDots = new DotSlider('.inspiration-wrapper .carousel-pagination-dots span', { autoPlayDelay: 3500 });
   inspirationDots.init();
@@ -643,7 +650,17 @@ export function initAllSliders() {
   // Inspiration cards Swiper
   const inspirationSwiper = initInspirationSwiper();
 
-  return { heroSwiper, collectionCarousel, testimonialsSwiper, inspirationDots, featureTracks, brandTracks, categorySwiper, inspirationSwiper };
+  return {
+    heroSwiper,
+    collectionCarousel,
+    collectionSwiper: collectionCarousel,
+    testimonialsSwiper,
+    inspirationDots,
+    featureTracks,
+    brandTracks,
+    categorySwiper,
+    inspirationSwiper,
+  };
 }
 
 export default DotSlider;

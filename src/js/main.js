@@ -10,6 +10,7 @@ import Countdown from '../components/countdown.js';
 import initProductCountdowns from './product-countdown.js';
 import { initAllAnimations } from '../components/animations.js';
 import initFooterAccordion from './footer-accordion.js';
+import { initHomeRooms } from '../components/home-rooms.js';
 import { onReady } from './utils.js';
 
 /**
@@ -63,6 +64,9 @@ function initializeApp() {
       // Footer accordion (mobile)
       initFooterAccordion();
 
+      // Home section click-to-card interaction
+      initHomeRooms();
+
       console.info('[App] Deferred components initialized');
     });
   } else {
@@ -76,6 +80,16 @@ function initializeApp() {
       });
       countdown.init();
       components.countdown = countdown;
+
+      // Per-product countdowns should also run in the fallback path
+      const productCountdowns = initProductCountdowns();
+      components.productCountdowns = productCountdowns;
+
+      // Keep footer accordion behavior consistent in fallback path
+      initFooterAccordion();
+
+      // Home section click-to-card interaction
+      initHomeRooms();
 
       const animations = initAllAnimations();
       components.animations = animations;

@@ -131,7 +131,12 @@ class Header {
 
         const shouldOpen = !item.classList.contains(this.dropdownOpenClass);
         if (shouldOpen) {
-          this._closeDropdowns();
+          // on desktop, force-hide other dropdowns to avoid :hover keeping them visible
+          if (!this._isMobileViewport()) {
+            this._forceHideAllExcept(item);
+          } else {
+            this._closeDropdowns(true);
+          }
         }
 
         this._setDropdownState(item, shouldOpen);
@@ -139,6 +144,7 @@ class Header {
 
       item.addEventListener('mouseenter', () => {
         if (!this._isMobileViewport()) {
+          this._forceHideAllExcept(item);
           this._setDropdownState(item, true);
         }
       });
@@ -151,6 +157,7 @@ class Header {
 
       item.addEventListener('focusin', () => {
         if (!this._isMobileViewport()) {
+          this._forceHideAllExcept(item);
           this._setDropdownState(item, true);
         }
       });
@@ -163,7 +170,7 @@ class Header {
 
       queryAll('a', dropdown).forEach((link) => {
         link.addEventListener('click', () => {
-          this._closeDropdowns();
+          this._closeDropdowns(true);
         });
       });
     });
@@ -194,9 +201,63 @@ class Header {
     }
   }
 
-  _closeDropdowns() {
+  _closeDropdowns(immediate = false) {
     this.dropdownItems.forEach((item) => {
+      const dropdown = query('.navbar-dropdown', item);
+
+      if (immediate && dropdown) {
+        // Temporarily force-hide the dropdown via inline styles so CSS :hover doesn't keep it visible
+        dropdown.style.transition = 'none';
+        dropdown.style.opacity = '0';
+        dropdown.style.visibility = 'hidden';
+        dropdown.style.pointerEvents = 'none';
+        dropdown.style.transform = 'translateY(-8px)';
+      }
+
       this._setDropdownState(item, false);
+
+      if (immediate && dropdown) {
+        // Restore transitions and remove forced inline hiding after a short tick
+        setTimeout(() => {
+          dropdown.style.transition = '';
+          dropdown.style.opacity = '';
+          dropdown.style.visibility = '';
+          dropdown.style.pointerEvents = '';
+          dropdown.style.transform = '';
+        }, 60);
+      }
+    });
+  }
+
+  _forceHideAllExcept(currentItem) {
+    this.dropdownItems.forEach((item) => {
+      if (item === currentItem) return;
+
+      const dropdown = query('.navbar-dropdown', item);
+      const toggle = query('.navbar-toggle', item);
+      if (!dropdown) return;
+
+      // remove open state and force-hide using display to override :hover
+      removeClass(item, this.dropdownOpenClass);
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+      dropdown.setAttribute('aria-hidden', 'true');
+
+      dropdown.style.transition = 'none';
+      dropdown.style.display = 'none';
+      dropdown.style.pointerEvents = 'none';
+      dropdown.style.opacity = '0';
+
+      // prevent CSS :hover from re-showing this dropdown while switching
+      item.setAttribute('data-suppress-hover', 'true');
+
+      // restore after a short delay so other actions can proceed
+      setTimeout(() => {
+        dropdown.style.transition = '';
+        dropdown.style.display = '';
+        dropdown.style.pointerEvents = '';
+        dropdown.style.opacity = '';
+        item.removeAttribute('data-suppress-hover');
+      }, 120);
     });
   }
 
