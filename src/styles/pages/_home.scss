@@ -79,11 +79,11 @@
 }
 
 .hero-slide-bg--comfort {
-  background-image: url('src/assets/comfort.jpg');
+  background-image: url('/assets/comfort.jpg');
 }
 
 .hero-slide-bg--image-2 {
-  background-image: url('src/assets/image-2.png');
+  background-image: url('/assets/image-2.png');
 }
 
 /* ================= HERO OVERLAY ================= */
@@ -2419,7 +2419,7 @@
   justify-content: center;
   overflow: visible;
   padding: 40px 16px 30px;
-  background: linear-gradient(135deg, rgba(68, 77, 57, 0.9), rgba(0, 0, 0, 0.7)), url("../assets/comfort.jpg") center/cover no-repeat;
+  background: linear-gradient(135deg, rgba(68, 77, 57, 0.9), rgba(0, 0, 0, 0.7)), url("/assets/comfort.jpg") center/cover no-repeat;
   background-attachment: fixed;
 }
 
