@@ -85,15 +85,15 @@ button {
   }
 }
 
-/* Scroll reveal animations */
+/* Scroll reveal animations - disabled */
 .reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  will-change: opacity, transform;
+  opacity: 1;
+  transform: none;
+  will-change: auto;
 }
 
 .reveal-visible {
-  animation: fadeInUp 0.6s ease forwards;
+  animation: none;
 }
 
 /* Staggered animations for grid items */
@@ -191,10 +191,10 @@ textarea {
   }
 }
 
-/* Image loading animation */
+/* Image loading animation - disabled */
 img[loading="lazy"] {
   opacity: 1;
-  transition: opacity 0.4s ease;
+  transition: none;
 
   &.loaded {
     opacity: 1;

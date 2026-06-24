@@ -44,34 +44,8 @@ export class ScrollReveal {
 
     if (!elements.length) return;
 
-    if (prefersReducedMotion) {
-      gsap.set(elements, { autoAlpha: 1, y: 0, clearProps: 'transform,opacity' });
-      return;
-    }
-
-    elements.forEach((el) => {
-      addClass(el, this.revealClass);
-      gsap.fromTo(
-        el,
-        {
-          autoAlpha: 0,
-          y: this.yOffset,
-        },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: this.duration,
-          ease: revealEase,
-          overwrite: 'auto',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 82%',
-            toggleActions: 'play none none none',
-            once: true,
-          },
-        }
-      );
-    });
+    // Disabled scroll reveal - set elements to visible immediately
+    gsap.set(elements, { autoAlpha: 1, y: 0, clearProps: 'transform,opacity' });
   }
 }
 
@@ -308,32 +282,8 @@ export class ProductCardInteractions {
     const mainImg = card?.querySelector('.product-image img, .set-image img, .image-box img');
 
     if (mainImg && variant.src) {
-      if (prefersReducedMotion) {
-        mainImg.src = variant.src;
-      } else {
-        gsap.killTweensOf(mainImg);
-        gsap.to(mainImg, {
-          opacity: 0,
-          scale: 0.985,
-          duration: 0.18,
-          ease: buttonEase,
-          overwrite: 'auto',
-          onComplete: () => {
-            mainImg.src = variant.src;
-            gsap.fromTo(
-              mainImg,
-              { opacity: 0, scale: 1.015 },
-              {
-                opacity: 1,
-                scale: 1,
-                duration: 0.45,
-                ease: revealEase,
-                overwrite: 'auto',
-              }
-            );
-          },
-        });
-      }
+      // Disabled fade animation - immediate image switch
+      mainImg.src = variant.src;
 
       // Remove selected from siblings
       const allVariants = queryAll('img', variant.parentElement);
@@ -560,51 +510,11 @@ export class TextReveal {
   init() {
     if (!this.groups.length) return;
 
-    if (prefersReducedMotion) {
-      this.groups.forEach(({ scope, selectors = [] }) => {
-        queryAll(scope).forEach((container) => {
-          const elements = collectScopedElements(container, selectors);
-          gsap.set(elements, { opacity: 1, y: 0, clearProps: 'transform,opacity' });
-        });
-      });
-      return;
-    }
-
-    this.groups.forEach(({ scope, selectors = [], start = 'top 84%', y = 48, duration = 0.95, stagger = 0.12, ease = textRevealEase }) => {
+    // Disabled text reveal - set all elements to visible immediately
+    this.groups.forEach(({ scope, selectors = [] }) => {
       queryAll(scope).forEach((container) => {
         const elements = collectScopedElements(container, selectors);
-
-        if (!elements.length) return;
-
-        gsap.set(elements, { opacity: 0, y, willChange: 'transform,opacity' });
-
-        const reveal = {
-          opacity: 1,
-          y: 0,
-          duration,
-          stagger,
-          ease,
-          overwrite: 'auto',
-
-          onComplete: () => {
-            gsap.set(elements, { clearProps: 'willChange' });
-          },
-        };
-
-        if (isInInitialViewport(container)) {
-          gsap.to(elements, reveal);
-          return;
-        }
-
-        gsap.to(elements, {
-          ...reveal,
-          scrollTrigger: {
-            trigger: container,
-            start,
-            toggleActions: 'play none none none',
-            once: true,
-          },
-        });
+        gsap.set(elements, { opacity: 1, y: 0, clearProps: 'transform,opacity' });
       });
     });
   }
